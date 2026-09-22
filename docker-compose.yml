@@ -1,54 +1,116 @@
-version: '3.8'
-
 services:
   postgres:
-    image: postgres:16-alpine
-    container_name: kera-postgres
-    restart: unless-stopped
+    image: postgres:15
+    container_name: kera_postgres
+    restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 3900Mcf!3
-      POSTGRES_DB: kera
+      POSTGRES_DB: kera_db
+      POSTGRES_USER: kera_admin
+      POSTGRES_PASSWORD: 3900Mcf!32510
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - kera-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U kera_admin -d kera_db"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: kera-redis
-    restart: unless-stopped
-    command: redis-server --requirepass 3900Mcf!3
+    container_name: kera_redis
+    restart: always
+    command: redis-server --requirepass 3900Mcf!32510
     volumes:
       - redis_data:/data
-    networks:
-      - kera-network
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: ["CMD", "redis-cli", "-a", "3900Mcf!32510", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: kera_n8n
+    environment:
+      N8N_HOST: api.stazak.com.br
+      N8N_PROTOCOL: https
+      N8N_PORT: 5678
+      WEBHOOK_URL: https://api.stazak.com.br/
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: kera_postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: kera_db
+      DB_POSTGRESDB_USER: kera_admin
+      DB_POSTGRESDB_PASSWORD: 3900Mcf!32510
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: admin
+      N8N_BASIC_AUTH_PASSWORD: 3900Mcf!32510
+      GENERIC_TIMEZONE: America/Sao_Paulo
+    restart: always
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  evolution_api:
+    image: evoapicloud/evolution-api:latest
+    container_name: kera_evolution
+    environment:
+      SERVER_URL: https://stazak.com.br
+      AUTHENTICATION_TYPE: apikey
+      AUTHENTICATION_API_KEY: 3900Mcf!32510
+      DATABASE_ENABLED: "true"
+      DATABASE_PROVIDER: postgresql
+      DATABASE_CONNECTION_URI: postgresql://kera_admin:3900Mcf!32510@kera_postgres:5432/kera_db
+      CACHE_REDIS_ENABLED: "true"
+      CACHE_REDIS_URI: redis://:3900Mcf!32510@kera_redis:6379
+      CACHE_REDIS_PREFIX_KEY: evolution
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - evolution_data:/evolution/instances
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: kera_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: juniorsta@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 3900Mcf!32510
+    restart: always
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: kera-backend
-    restart: unless-stopped
+    container_name: kera_backend
+    restart: always
     environment:
       NODE_ENV: production
       PORT: 4000
-      DATABASE_URL: postgresql://postgres:3900Mcf!3@postgres:5432/kera
-      REDIS_URL: redis://:3900Mcf!3@redis:6379
-      JWT_SECRET: change_me_in_env
-      WEBHOOK_SECRET: change_me_in_env
-      EVOLUTION_URL: http://evolution:8080
-      EVOLUTION_API_KEY: change_me_in_env
+      DATABASE_URL: postgresql://kera_admin:3900Mcf!32510@kera_postgres:5432/kera_db
+      REDIS_URL: redis://:3900Mcf!32510@kera_redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+      EVOLUTION_URL: http://kera_evolution:8080
+      EVOLUTION_API_KEY: 3900Mcf!32510
       FRONTEND_URL: https://app.kera.stazak.com.br
       API_URL: https://api.kera.stazak.com.br
     depends_on:
@@ -56,8 +118,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    networks:
-      - kera-network
     expose:
       - "4000"
 
@@ -65,38 +125,19 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: kera-frontend
-    restart: unless-stopped
+    container_name: kera_frontend
+    restart: always
     environment:
       NODE_ENV: production
       NEXT_PUBLIC_API_URL: https://api.kera.stazak.com.br
     depends_on:
       - backend
-    networks:
-      - kera-network
     expose:
       - "3000"
-
-  evolution:
-    image: atendimiento/evolution-api:latest
-    container_name: kera-evolution
-    restart: unless-stopped
-    environment:
-      SERVER_PORT: 8080
-      EVOLUTION_API_KEY: change_me_in_env
-      CORS_ALLOW_ORIGIN: https://app.kera.stazak.com.br,https://api.kera.stazak.com.br
-    volumes:
-      - evolution_data:/evolution
-    networks:
-      - kera-network
-    expose:
-      - "8080"
 
 volumes:
   postgres_data:
   redis_data:
+  n8n_data:
   evolution_data:
-
-networks:
-  kera-network:
-    driver: bridge
+  pgadmin_data:
