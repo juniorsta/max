@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -170,15 +171,15 @@ export default function LeadsPage() {
                       onClick={() => openEdit(lead)}
                     >
                       <p className="font-medium text-white truncate">{lead.nome || 'Sem nome'}</p>
-                      <p className="text-sm text-gray-400">{lead.telefone}</p>
-                      {lead.veiculo && <p className="text-xs text-gray-500 mt-1">{lead.veiculo}</p>}
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-sm text-gray-400>{lead.telefone}</p>
+                      {lead.veiculo && <p className="text-xs text-gray-500 mt-1>{lead.veiculo}</p>}
+                      <p className="text-xs text-gray-500 mt-1>
                         {new Date(lead.createdAt).toLocaleDateString('pt-BR')}
                       </p>
                     </div>
                   ))}
                 {leadsByEtapa[etapa].length === 0 && (
-                  <div className="text-center py-8 text-gray-500 text-sm">
+                  <div className="text-center py-8 text-gray-500 text-sm>
                     Arraste um lead para cá
                   </div>
                 )}
@@ -193,24 +194,24 @@ export default function LeadsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-gray-400 border-b border-gray-800">
-                    <th className="pb-2">Nome</th>
-                    <th className="pb-2">Telefone</th>
-                    <th className="pb-2">Etapa</th>
-                    <th className="pb-2">Ações</th>
+                  <tr className="text-left text-gray-400 border-b border-gray-800>
+                    <th className="pb-2>Nome</th>
+                    <th className="pb-2>Telefone</th>
+                    <th className="pb-2>Etapa</th>
+                    <th className="pb-2>Ações</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-800">
+                <tbody className="divide-y divide-gray-800>
                   {leads.map((lead) => (
-                    <tr key={lead.id} className="hover:bg-gray-800/50">
-                      <td className="py-2 font-medium">{lead.nome || 'Sem nome'}</td>
-                      <td className="py-2 text-gray-400">{lead.telefone}</td>
-                      <td className="py-2">
+                    <tr key={lead.id} className="hover:bg-gray-800/50>
+                      <td className="py-2 font-medium>{lead.nome || 'Sem nome'}</td>
+                      <td className="py-2 text-gray-400>{lead.telefone}</td>
+                      <td className="py-2>
                         <span className={`px-2 py-0.5 text-xs rounded-full ${ETAPA_COLORS[lead.etapa]}`}>
                           {ETAPA_LABELS[lead.etapa]}
                         </span>
                       </td>
-                      <td className="py-2">
+                      <td className="py-2>
                         <div className="flex gap-1">
                           <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); openEdit(lead); }}>
                             ✏️
@@ -228,11 +229,11 @@ export default function LeadsPage() {
 
             {/* Pagination */}
             {meta.totalPages > 1 && (
-              <div className="flex items-center justify-between mt-4">
-                <span className="text-sm text-gray-400">
+              <div className="flex items-center justify-between mt-4>
+                <span className="text-sm text-gray-400>
                   Página {meta.page} de {meta.totalPages} — {meta.total} leads
                 </span>
-                <div className="flex gap-2">
+                <div className="flex gap-2>
                   <Button
                     variant="outline"
                     size="sm"
@@ -257,12 +258,12 @@ export default function LeadsPage() {
 
         {/* Modal */}
         {showModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <Card className="w-full max-w-md m-4">
-              <h3 className="text-lg font-semibold mb-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50>
+            <Card className="w-full max-w-md m-4>
+              <h3 className="text-lg font-semibold mb-4>
                 {editingLead ? 'Editar Lead' : 'Novo Lead'}
               </h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4>
                 <Input
                   label="Telefone *"
                   value={formData.telefone}
@@ -294,11 +295,11 @@ export default function LeadsPage() {
                   ))}
                 </Input>
 
-                <div className="flex gap-2 pt-2">
+                <div className="flex gap-2 pt-2>
                   <Button variant="outline" type="button" onClick={() => { setShowModal(false); setEditingLead(null); }}>
                     Cancelar
                   </Button>
-                  <Button type="submit" className="flex-1">
+                  <Button type="submit" className="flex-1>
                     {editingLead ? 'Salvar' : 'Criar'}
                   </Button>
                 </div>
