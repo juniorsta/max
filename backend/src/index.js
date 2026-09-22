@@ -9,6 +9,7 @@ import { validateWebhookSecret } from './middleware/webhook.js';
 import companiesRouter from './routes/companies.js';
 import leadsRouter from './routes/leads.js';
 import conversationsRouter from './routes/conversations.js';
+import webhookRouter from './routes/webhook.js';
 import dashboardRouter from './routes/dashboard.js';
 import authRouter from './routes/auth.js';
 
@@ -37,17 +38,7 @@ app.use('/api/v1/conversations', authMiddleware, conversationsRouter);
 app.use('/api/v1/dashboard', authMiddleware, dashboardRouter);
 
 // Webhook - no auth, only secret
-app.post('/api/v1/webhooks/whatsapp', validateWebhookSecret, async (req, res) => {
-  try {
-    const { instance, data } = req.body;
-    // TODO: process webhook
-    console.log('Webhook received:', instance, data);
-    res.json({ received: true });
-  } catch (e) {
-    console.error('Webhook error:', e);
-    res.status(500).json({ error: 'Webhook processing failed' });
-  }
-});
+app.use('/api/v1/webhooks', validateWebhookSecret, webhookRouter);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Backend running on ${PORT}`));
