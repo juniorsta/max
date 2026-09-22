@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Empresa {
+  id        String   @id @default(cuid())
+  nome      String
+  plano     String   @default("basic")
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  usuarios   Usuario[]
+  leads      Lead[]
+  agendamentos Agendamento[]
+
+  @@index([status])
+}
+
+model Usuario {
+  id         String   @id @default(cuid())
+  empresaId  String
+  nome       String
+  email      String
+  senhaHash  String
+  role       String   @default("admin")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  empresa Empresa @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+
+  @@unique([empresaId, email])
+  @@index([empresaId])
+}
+
+model Lead {
+  id         String   @id @default(cuid())
+  empresaId  String
+  telefone   String
+  nome       String?
+  veiculo    String?
+  etapa      String   @default("novo")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  empresa    Empresa    @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  conversas  Conversa[]
+  agendamentos Agendamento[]
+
+  @@index([empresaId, telefone])
+  @@index([empresaId, etapa])
+  @@index([createdAt])
+}
+
+model Conversa {
+  id        String   @id @default(cuid())
+  leadId    String
+  direction String   // incoming/outgoing
+  mensagem  String
+  timestamp DateTime @default(now())
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+  @@index([timestamp])
+}
+
+model Agendamento {
+  id        String   @id @default(cuid())
+  leadId    String
+  empresaId String
+  data      DateTime
+  status    String   @default("pendente")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lead    Lead    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  empresa Empresa @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+
+  @@index([empresaId])
+  @@index([leadId])
+}

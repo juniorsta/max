@@ -1,0 +1,20 @@
+# Kera - SaaS Estética Automotiva
+
+## Stack
+- Backend: Express + Prisma + PostgreSQL
+- Frontend: Next.js 16
+- Cache: Redis
+- WhatsApp: Evolution API
+- IA: FreeLLMAPI com AI Router
+- Infra: Docker + Apache + HTTPS
+
+## Desenvolvimento
+docker compose up -d
+
+Backend: https://api.kera.stazak.com.br
+Frontend: https://app.kera.stazak.com.br
+
+## Estrutura
+/backend - API
+/frontend - Next.js
+/docs - Documentação
