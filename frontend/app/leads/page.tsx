@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AppLayout } from '../../../components/AppLayout';
-import { Card } from '../../../components/Card';
-import { Button } from '../../../components/Button';
-import { Input } from '../../../components/Input';
-import { api } from '../../../lib/api';
+import { AppLayout } from '../../components/AppLayout';
+import { Card } from '../../components/Card';
+import { Button } from '../../components/Button';
+import { Input } from '../../components/Input';
+import { api } from '../../lib/api';
 
 interface Lead {
   id: string;
