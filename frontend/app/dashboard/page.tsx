@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AppLayout } from '@/components/AppLayout';
-import { Card } from '@/components/Card';
-import { api } from '@/lib/api';
+import { AppLayout } from '../../components/AppLayout';
+import { Card } from '../../components/Card';
+import { api } from '../../lib/api';
 
 interface Metrics {
   leads: { total: number; hoje: number; semana: number; mes: number; porEtapa: { etapa: string; count: number }[] };
