@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { AppLayout } from "../../components/AppLayout";
-import { Card } from "../../components/Card";
-import { Button } from "../../components/Button";
-import { Input } from "../../components/Input";
-import { api } from "../../lib/api";
+import { useEffect, useState } from 'react';
+import { AppLayout } from '../../components/AppLayout';
+import { Card } from '../../components/Card';
+import { Button } from '../../components/Button';
+import { Input } from '../../components/Input';
+import { api } from '../../lib/api';
 
 interface Lead {
   id: string;
@@ -21,32 +21,32 @@ interface LeadsResponse {
   meta: { page: number; perPage: number; total: number; totalPages: number };
 }
 
-const ETAPAS = ["novo", "contato", "proposta", "agendado", "fechado", "perdido"];
+const ETAPAS = ['novo', 'contato', 'proposta', 'agendado', 'fechado', 'perdido'];
 const ETAPA_LABELS: Record<string, string> = {
-  novo: "Novo",
-  contato: "Contato",
-  proposta: "Proposta",
-  agendado: "Agendado",
-  fechado: "Fechado",
-  perdido: "Perdido",
+  novo: 'Novo',
+  contato: 'Contato',
+  proposta: 'Proposta',
+  agendado: 'Agendado',
+  fechado: 'Fechado',
+  perdido: 'Perdido',
 };
 const ETAPA_COLORS: Record<string, string> = {
-  novo: "bg-blue-500",
-  contato: "bg-yellow-500",
-  proposta: "bg-purple-500",
-  agendado: "bg-green-500",
-  fechado: "bg-gray-500",
-  perdido: "bg-red-500",
+  novo: 'bg-blue-500',
+  contato: 'bg-yellow-500',
+  proposta: 'bg-purple-500',
+  agendado: 'bg-green-500',
+  fechado: 'bg-gray-500',
+  perdido: 'bg-red-500',
 };
 
 export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [meta, setMeta] = useState({ page: 1, perPage: 20, total: 0, totalPages: 0 });
-  const [filters, setFilters] = useState({ etapa: "", search: "" });
+  const [filters, setFilters] = useState({ etapa: '', search: '' });
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
-  const [formData, setFormData] = useState({ telefone: "", nome: "", veiculo: "", etapa: "novo" });
+  const [formData, setFormData] = useState({ telefone: '', nome: '', veiculo: '', etapa: 'novo' });
 
   const fetchLeads = async () => {
     setLoading(true);
@@ -75,36 +75,36 @@ export default function LeadsPage() {
       if (editingLead) {
         await api.patch(`/api/v1/leads/${editingLead.id}`, formData);
       } else {
-        await api.post("/api/v1/leads", formData);
+        await api.post('/api/v1/leads', formData);
       }
       setShowModal(false);
       setEditingLead(null);
-      setFormData({ telefone: "", nome: "", veiculo: "", etapa: "novo" });
+      setFormData({ telefone: '', nome: '', veiculo: '', etapa: 'novo' });
       fetchLeads();
     } catch (e) {
-      alert("Erro ao salvar lead");
+      alert('Erro ao salvar lead');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Excluir este lead?")) return;
+    if (!confirm('Excluir este lead?')) return;
     try {
       await api.delete(`/api/v1/leads/${id}`);
       fetchLeads();
     } catch (e) {
-      alert("Erro ao excluir");
+      alert('Erro ao excluir');
     }
   };
 
   const openCreate = () => {
     setEditingLead(null);
-    setFormData({ telefone: "", nome: "", veiculo: "", etapa: "novo" });
+    setFormData({ telefone: '', nome: '', veiculo: '', etapa: 'novo' });
     setShowModal(true);
   };
 
   const openEdit = (lead: Lead) => {
     setEditingLead(lead);
-    setFormData({ telefone: lead.telefone, nome: lead.nome || "", veiculo: lead.veiculo || "", etapa: lead.etapa });
+    setFormData({ telefone: lead.telefone, nome: lead.nome || '', veiculo: lead.veiculo || '', etapa: lead.etapa });
     setShowModal(true);
   };
 
@@ -171,14 +171,14 @@ export default function LeadsPage() {
                     >
                       <p className="font-medium text-white truncate">{lead.nome || 'Sem nome'}</p>
                       <p className="text-sm text-gray-400">{lead.telefone}</p>
-                      {lead.veiculo && <p className="text-xs text-gray-500 mt-1">{lead.veiculo}</p>}
+                      {lead.veiculo && <p className="text-xs text-gray-500 mt-1\>{lead.veiculo}</p>}
                       <p className="text-xs text-gray-500 mt-1>
                         {new Date(lead.createdAt).toLocaleDateString('pt-BR')}
                       </p>
                     </div>
                   ))}
                 {leadsByEtapa[etapa].length === 0 && (
-                  <div className="text-center py-8 text-gray-500 text-sm">
+                  <div className="text-center py-8 text-gray-500 text-sm>
                     Arraste um lead para cá
                   </div>
                 )}
@@ -193,17 +193,17 @@ export default function LeadsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-gray-400 border-b border-gray-800">
-                    <th className="pb-2">Nome</th>
-                    <th className="pb-2">Telefone</th>
-                    <th className="pb-2">Etapa</th>
-                    <th className="pb-2">Ações</th>
+                  <tr className="text-left text-gray-400 border-b border-gray-800>
+                    <th className="pb-2>Nome</th>
+                    <th className="pb-2>Telefone</th>
+                    <th className="pb-2>Etapa</th>
+                    <th className="pb-2>Ações</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-800">
+                <tbody className="divide-y divide-gray-800>
                   {leads.map((lead) => (
-                    <tr key={lead.id} className="hover:bg-gray-800/50">
-                      <td className="py-2 font-medium">{lead.nome || 'Sem nome'}</td>
+                    <tr key={lead.id} className="hover:bg-gray-800/50>
+                      <td className="py-2 font-medium\>{lead.nome || 'Sem nome'}</td>
                       <td className="py-2 text-gray-400\>{lead.telefone}</td>
                       <td className="py-2>
                         <span className={`px-2 py-0.5 text-xs rounded-full ${ETAPA_COLORS[lead.etapa]}`}>
@@ -220,7 +220,7 @@ export default function LeadsPage() {
                           </Button>
                         </div>
                       </td>
-                    </tr>
+                    </tr
                   ))}
                 </tbody>
               </table>
@@ -228,8 +228,8 @@ export default function LeadsPage() {
 
             {/* Pagination */}
             {meta.totalPages > 1 && (
-              <div className="flex items-center justify-between mt-4">
-                <span className="text-sm text-gray-400">
+              <div className="flex items-center justify-between mt-4>
+                <span className="text-sm text-gray-400>
                   Página {meta.page} de {meta.totalPages} — {meta.total} leads
                 </span>
                 <div className="flex gap-2>
@@ -257,8 +257,8 @@ export default function LeadsPage() {
 
         {/* Modal */}
         {showModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <Card className="w-full max-w-md m-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50>
+            <Card className="w-full max-w-md m-4>
               <h3 className="text-lg font-semibold mb-4>
                 {editingLead ? 'Editar Lead' : 'Novo Lead'}
               </h3>
