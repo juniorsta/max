@@ -97,29 +97,31 @@ services:
         condition: service_healthy
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: kera_backend
-    restart: always
-    environment:
-      NODE_ENV: production
-      PORT: 4000
-      DATABASE_URL: postgresql://kera_admin:3900Mcf!32510@kera_postgres:5432/kera_db
-      REDIS_URL: redis://:3900Mcf!32510@kera_redis:6379
-      JWT_SECRET: ${JWT_SECRET}
-      WEBHOOK_SECRET: ${WEBHOOK_SECRET}
-      EVOLUTION_URL: http://kera_evolution:8080
-      EVOLUTION_API_KEY: 3900Mcf!32510
-      FRONTEND_URL: https://app.kera.stazak.com.br
-      API_URL: https://api.kera.stazak.com.br
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    expose:
-      - "4000"
+      build:
+        context: ./backend
+        dockerfile: Dockerfile
+      container_name: kera_backend
+      restart: always
+      environment:
+        NODE_ENV: production
+        PORT: 4000
+        DATABASE_URL: postgresql://kera_admin:***@kera_postgres:5432/kera_db
+        REDIS_URL: redis://:3900Mcf!32510@kera_redis:6379
+        JWT_SECRET: ${JWT_SECRET}
+        WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+        EVOLUTION_URL: http://kera_evolution:8080
+        EVOLUTION_API_KEY: 3900Mcf!32510
+        FRONTEND_URL: https://app.kera.stazak.com.br
+        API_URL: https://api.kera.stazak.com.br
+      depends_on:
+        postgres:
+          condition: service_healthy
+        redis:
+          condition: service_healthy
+      ports:
+        - "4000:4000"
+      expose:
+        - "4000"
 
   frontend:
     build:
@@ -132,6 +134,8 @@ services:
       NEXT_PUBLIC_API_URL: https://api.kera.stazak.com.br
     depends_on:
       - backend
+    ports:
+      - "3000:3000"
     expose:
       - "3000"
 
