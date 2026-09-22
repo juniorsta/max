@@ -8,6 +8,8 @@ import { authMiddleware } from './middleware/auth.js';
 import { validateWebhookSecret } from './middleware/webhook.js';
 import companiesRouter from './routes/companies.js';
 import leadsRouter from './routes/leads.js';
+import conversationsRouter from './routes/conversations.js';
+import dashboardRouter from './routes/dashboard.js';
 import authRouter from './routes/auth.js';
 
 dotenv.config();
@@ -31,6 +33,8 @@ app.use('/api/v1', requireTenant);
 // Protected routes
 app.use('/api/v1/companies', authMiddleware, companiesRouter);
 app.use('/api/v1/leads', authMiddleware, leadsRouter);
+app.use('/api/v1/conversations', authMiddleware, conversationsRouter);
+app.use('/api/v1/dashboard', authMiddleware, dashboardRouter);
 
 // Webhook - no auth, only secret
 app.post('/api/v1/webhooks/whatsapp', validateWebhookSecret, async (req, res) => {
