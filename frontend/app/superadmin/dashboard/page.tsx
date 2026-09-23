@@ -66,7 +66,7 @@ export default function SuperadminDashboard() {
   if (error) return <div className="p-6 text-red-400">{error}</div>;
   if (!data) return null;
 
-  const { kpis, graficos } = data;
+  const { kpis, graficos } = data as {kpis: KPIs, graficos: Graficos};
 
   const renderBarChart = (items: any[], labelFn: (item: any) => string, valueFn: (item: any) => number, height = 80) => {
     const max = Math.max(...items.map(valueFn));
