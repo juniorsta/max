@@ -16,11 +16,11 @@ export default function SuperadminDashboard() {
   }, [user]);
 
   const fetchDashboard = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/dashboard`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+    try {
+      setLoading(true);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/dashboard`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       if (!res.ok) throw new Error('Failed to fetch');
       const result = await res.json();
       setData(result);
@@ -49,7 +49,7 @@ export default function SuperadminDashboard() {
             <div key={idx} className="flex-1 flex flex-col items-center relative">
               <div 
                 className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t"
-                style={{ height: \`\${percent}%\` }}
+                style={{ height: `${percent}%` }}
                 title={`${labelFn(item)}: ${valueFn(item)}`}
               />
               <div className="text-xs text-gray-400 mt-1">{labelFn(item)}</div>
