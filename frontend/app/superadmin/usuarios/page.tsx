@@ -3,34 +3,39 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth';
 import { Card } from '@/components/Card';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
 
-interface EmpresaUsuario {
-  empresaId: string;
-  empresaNome: string;
-  usuarios: { id: string; nome: string; email: string; role: string; createdAt: string }[];
+interface Usuario {
+  id: string;
+  nome: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  empresa: { id: string; nome: string };
 }
 
-export default function SuperadminUsuarios() {
+export default function UsuariosPage() {
   const { user, token } = useAuth();
-  const [dados, setDados] = useState<EmpresaUsuario[]>([]);
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState({ nome: '', email: '', senha: '', role: 'user', empresaId: '' });
 
   useEffect(() => {
-    if (!user) return;
+    if (!token) return;
     fetchUsuarios();
-  }, [user]);
+  }, [token, search]);
 
   const fetchUsuarios = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/companies`, {
+      const params = new URLSearchParams({ search, page: '1', limit: '50' });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/users?${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const empresas = await res.json();
-      setDados(empresas.map((e: any) => ({
-        empresaId: e.id,
-        empresaNome: e.nome,
-        usuarios: e.usuarios || []
-      })));
+      const data = await res.json();
+      setUsuarios(data.data || []);
     } catch (e) {
       console.error(e);
     } finally {
@@ -38,28 +43,52 @@ export default function SuperadminUsuarios() {
     }
   };
 
+  const resetPassword = async (id: string) => {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/users/${id}/reset-password`, {
+        method: 'PATCH',
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ senha: '123456' })
+      });
+      alert('Senha resetada para: 123456');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   if (loading) return <div className="p-6 text-white">Carregando...</div>;
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">Usuários da Plataforma</h1>
-      
-      {dados.map(emp => (
-        <Card key={emp.empresaId}>
-          <h2 className="text-lg font-semibold text-white mb-4">{emp.empresaNome}</h2>
-          <div className="space-y-2">
-            {emp.usuarios.map(u => (
-              <div key={u.id} className="flex justify-between items-center py-2 border-b border-gray-800 last:border-0">
-                <div>
-                  <p className="text-white">{u.nome}</p>
-                  <p className="text-sm text-gray-400">{u.email} • {u.role}</p>
-                </div>
-                <span className="text-xs text-gray-500">{new Date(u.createdAt).toLocaleDateString('pt-BR')}</span>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-white">Gestão de Usuários</h1>
+      </div>
+
+      <Input
+        label="Buscar usuário"
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        placeholder="Nome ou email..."
+      />
+
+      <div className="grid gap-4">
+        {usuarios.map(u => (
+          <Card key={u.id}>
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="text-lg font-semibold text-white">{u.nome}</h3>
+                <p className="text-sm text-gray-400">{u.email}</p>
+                <p className="text-sm text-gray-500">Empresa: {u.empresa?.nome}</p>
+                <p className="text-sm text-gray-500 mt-1">Papel: <span className="px-2 py-0.5 rounded bg-gray-700 text-xs">{u.role}</span></p>
               </div>
-            ))}
-          </div>
-        </Card>
-      ))}
+              <Button size="sm" variant="ghost" onClick={() => resetPassword(u.id)}>Resetar Senha</Button>
+            </div>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }

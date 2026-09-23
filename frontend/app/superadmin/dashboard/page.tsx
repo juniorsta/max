@@ -41,9 +41,9 @@ export default function SuperadminDashboard() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user) return;
+    if (!token) return;
     fetchDashboard();
-  }, [user]);
+  }, [token]);
 
   const fetchDashboard = async () => {
     try {
@@ -68,21 +68,20 @@ export default function SuperadminDashboard() {
 
   const { kpis, graficos } = data as {kpis: KPIs, graficos: Graficos};
 
-  const renderBarChart = (items: any[], labelFn: (item: any) => string, valueFn: (item: any) => number, height = 80) => {
+  const renderBarChart = (items: any[], labelFn: (item: any) => string, valueFn: (item: any) => number) => {
     const max = Math.max(...items.map(valueFn));
     return (
-      <div className="h-[80px] flex items-end gap-1 px-2">
-        {items.map((item, idx) => {
+      <div className="h-[120px] flex items-end gap-1 px-2">
+        {items.slice(-30).map((item, idx) => {
           const value = valueFn(item);
           const percent = max > 0 ? (value / max) * 100 : 0;
           return (
-            <div key={idx} className="flex-1 flex flex-col items-center relative">
+            <div key={idx} className="flex-1 flex flex-col items-center">
               <div 
                 className="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t"
                 style={{ height: `${percent}%` }}
                 title={`${labelFn(item)}: ${valueFn(item)}`}
               />
-              <div className="text-xs text-gray-400 mt-1">{labelFn(item)}</div>
             </div>
           );
         })}
@@ -151,36 +150,20 @@ export default function SuperadminDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <h2 className="text-lg font-semibold text-white mb-4">Conversas por Dia (últimos 30 dias)</h2>
-          {graficos.conversasPorDia && renderBarChart(
-            graficos.conversasPorDia,
-            (d) => d.date,
-            (d) => d.count
-          )}
+          <h2 className="text-lg font-semibold text-white mb-4">Conversas por Dia</h2>
+          {graficos.conversasPorDia && renderBarChart(graficos.conversasPorDia, (d) => d.date, (d) => d.count)}
         </Card>
         <Card>
-          <h2 className="text-lg font-semibold text-white mb-4">Crescimento de Clientes (últimos 12 meses)</h2>
-          {graficos.crescimentoClientes && renderBarChart(
-            graficos.crescimentoClientes,
-            (d) => d.month,
-            (d) => d.count
-          )}
+          <h2 className="text-lg font-semibold text-white mb-4">Crescimento de Clientes</h2>
+          {graficos.crescimentoClientes && renderBarChart(graficos.crescimentoClientes, (d) => d.month, (d) => d.count)}
         </Card>
         <Card>
-          <h2 className="text-lg font-semibold text-white mb-4">Novos Leads por Dia (últimos 30 dias)</h2>
-          {graficos.novosLeadsPorDia && renderBarChart(
-            graficos.novosLeadsPorDia,
-            (d) => d.date,
-            (d) => d.count
-          )}
+          <h2 className="text-lg font-semibold text-white mb-4">Novos Leads por Dia</h2>
+          {graficos.novosLeadsPorDia && renderBarChart(graficos.novosLeadsPorDia, (d) => d.date, (d) => d.count)}
         </Card>
         <Card>
-          <h2 className="text-lg font-semibold text-white mb-4">Agendamentos por Semana (últimas 12 semanas)</h2>
-          {graficos.agendamentosPorSemana && renderBarChart(
-            graficos.agendamentosPorSemana,
-            (d) => d.week,
-            (d) => d.count
-          )}
+          <h2 className="text-lg font-semibold text-white mb-4">Agendamentos por Semana</h2>
+          {graficos.agendamentosPorSemana && renderBarChart(graficos.agendamentosPorSemana, (d) => d.week, (d) => d.count)}
         </Card>
       </div>
 

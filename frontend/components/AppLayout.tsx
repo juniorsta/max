@@ -12,8 +12,11 @@ const navigation = [
 ];
 
 const superadminNavigation = [
+  { name: 'Dashboard', href: '/superadmin/dashboard', icon: '📊' },
   { name: 'Empresas', href: '/superadmin/empresas', icon: '🏢' },
   { name: 'Usuários', href: '/superadmin/usuarios', icon: '👥' },
+  { name: 'Monitoramento', href: '/superadmin/monitoramento', icon: '📈' },
+  { name: 'Logs', href: '/superadmin/logs', icon: '📝' },
   { name: 'Relatórios', href: '/superadmin/relatorios', icon: '📊' },
   { name: 'Configurações', href: '/superadmin/configuracoes', icon: '⚙️' },
 ];

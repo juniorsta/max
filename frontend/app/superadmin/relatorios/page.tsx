@@ -3,38 +3,40 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth';
 import { Card } from '@/components/Card';
-import { Button } from '@/components/Button';
 
 interface Stats {
   totalEmpresas: number;
   empresasAtivas: number;
-  totalLeads: number;
-  totalUsuarios: number;
+  usuariosTotais: number;
+  leadsTotais: number;
+  conversasHoje: number;
 }
 
-export default function SuperadminRelatorios() {
+export default function RelatoriosPage() {
   const { user, token } = useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
+    if (!token) return;
     fetchStats();
-  }, [user]);
+  }, [token]);
 
   const fetchStats = async () => {
     try {
-      // Simulated - in real app seria endpoint /api/v1/superadmin/stats
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/companies`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/dashboard`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const empresas = await res.json();
-      setStats({
-        totalEmpresas: empresas.length,
-        empresasAtivas: empresas.filter((e: any) => e.status === 'active').length,
-        totalLeads: 0,
-        totalUsuarios: empresas.reduce((acc: number, e: any) => acc + (e.usuarios?.length || 0), 0),
-      });
+      const data = await res.json();
+      if (data.kpis) {
+        setStats({
+          totalEmpresas: data.kpis.empresasAtivas + data.kpis.empresasBloqueadas + data.kpis.empresasTeste,
+          empresasAtivas: data.kpis.empresasAtivas,
+          usuariosTotais: data.kpis.usuariosTotais,
+          leadsTotais: data.kpis.totalLeads,
+          conversasHoje: data.kpis.conversasHoje
+        });
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -46,9 +48,9 @@ export default function SuperadminRelatorios() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">Relatórios da Plataforma</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <h1 className="text-2xl font-bold text-white">Relatórios</h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card>
           <p className="text-sm text-gray-400">Total de Empresas</p>
           <p className="text-3xl font-bold text-white mt-2">{stats?.totalEmpresas || 0}</p>
@@ -58,19 +60,18 @@ export default function SuperadminRelatorios() {
           <p className="text-3xl font-bold text-green-400 mt-2">{stats?.empresasAtivas || 0}</p>
         </Card>
         <Card>
-          <p className="text-sm text-gray-400">Total de Usuários</p>
-          <p className="text-3xl font-bold text-white mt-2">{stats?.totalUsuarios || 0}</p>
+          <p className="text-sm text-gray-400">Usuários Totais</p>
+          <p className="text-3xl font-bold text-white mt-2">{stats?.usuariosTotais || 0}</p>
         </Card>
         <Card>
           <p className="text-sm text-gray-400">Total de Leads</p>
-          <p className="text-3xl font-bold text-purple-400 mt-2">{stats?.totalLeads || 0}</p>
+          <p className="text-3xl font-bold text-blue-400 mt-2">{stats?.leadsTotais || 0}</p>
+        </Card>
+        <Card>
+          <p className="text-sm text-gray-400">Conversas Hoje</p>
+          <p className="text-3xl font-bold text-purple-400 mt-2">{stats?.conversasHoje || 0}</p>
         </Card>
       </div>
-
-      <Card>
-        <h2 className="text-lg font-semibold text-white mb-4">Empresas que vencem em breve</h2>
-        <p className="text-gray-400">Funcionalidade em desenvolvimento</p>
-      </Card>
     </div>
   );
 }
