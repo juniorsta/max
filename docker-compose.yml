@@ -127,6 +127,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: https://api.kera.stazak.com.br
     container_name: kera_frontend
     restart: always
     environment:
