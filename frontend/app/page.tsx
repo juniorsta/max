@@ -7,11 +7,17 @@ import { useAuth } from '../lib/auth';
 
 export default function Home() {
   const router = useRouter();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   useEffect(() => {
-    if (token) router.push('/dashboard');
-  }, [token, router]);
+    if (token) {
+      if (user?.role === 'superadmin') {
+        router.push('/superadmin/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
+    }
+  }, [token, user, router]);
 
   if (token) return null;
 
