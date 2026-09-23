@@ -38,12 +38,7 @@ export default function SuperadminDashboard() {
 
   const { kpis, graficos } = data;
 
-  const renderBarChart = <T>(
-  items: T[],
-  labelFn: (item: T) => string,
-  valueFn: (item: T) => number,
-  height = 80
-) => {
+  const renderBarChart = (items: any[], labelFn: (item: any) => string, valueFn: (item: any) => number, height = 80) => {
     const max = Math.max(...items.map(valueFn));
     return (
       <div className="h-[80px] flex items-end gap-1 px-2">
