@@ -6,7 +6,6 @@ const { sendTextMessage } = require('../services/evolution.js');
 
 const express = require('express');
 const router = express.Router();
-const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 // Webhook WhatsApp (Evolution API)

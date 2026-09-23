@@ -4,7 +4,8 @@ const { PrismaClient } = require('@prisma/client');
 const { authMiddleware } = require('../middleware/auth.js');
 const { requireTenant } = require('../middleware/tenant.js');
 const { validate } = require('../middleware/validate.js');
-import {
+
+const {
   createAppointment,
   getAppointments,
   getAppointmentById,
