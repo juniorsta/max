@@ -1,85 +1,73 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/lib/auth';
 import { Card } from '@/components/Card';
-import { Button } from '@/components/Button';
 
-interface Instancia {
-  id: string;
-  nome: string;
-  status: string;
-  whatsappNumber: string;
-  lastActivity: string;
-}
+const instancias = [
+  { nome: 'AutoBike Estética', status: 'Online', whatsapp: '(11) 99999-9999', ultimaAtividade: '2 min atrás' },
+  { nome: 'Detal Garage', status: 'Online', whatsapp: '(11) 98888-8888', ultimaAtividade: '5 min atrás' },
+  { nome: 'Prime Clean', status: 'Offline', whatsapp: '(11) 97777-7777', ultimaAtividade: '1 hora atrás' },
+  { nome: '22 Motors', status: 'QR Pendente', whatsapp: '(11) 96666-6666', ultimaAtividade: 'Agora' },
+];
 
 export default function EvolutionPage() {
-  const { token } = useAuth();
-  const [instancias, setInstancias] = useState<Instancia[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchInstancias();
-  }, [token]);
-
-  const fetchInstancias = async () => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/evolution/instances`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
-      setInstancias(data || []);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return <div className="flex items-center justify-center h-64"><div className="text-purple-400">Carregando...</div></div>;
-  }
-
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Evolution API</h1>
-          <p className="text-slate-400 mt-1">Gerencie as instâncias WhatsApp</p>
-        </div>
-        <Button>+ Nova Instância</Button>
+      <div>
+        <h1 className="text-[32px] font-bold text-[#F3F4F6]">Evolution API</h1>
+        <p className="text-[#9CA3AF] mt-1">Gerencie as instâncias WhatsApp da plataforma</p>
       </div>
 
-      <Card>
-        <div className="text-center py-12">
-          <div className="w-48 h-48 mx-auto bg-white p-4 rounded-lg">
-            <div className="w-full h-full bg-gradient-to-br from-green-400 to-green-600 rounded flex items-center justify-center">
-              <span className="text-white text-4xl">QR</span>
-            </div>
-          </div>
-          <p className="text-slate-400 mt-4">Escaneie o QR Code para conectar</p>
-          <Button className="mt-4">Atualizar QR Code</Button>
-        </div>
-      </Card>
-
-      <div className="grid gap-4">
-        {instancias.map(inst => (
-          <Card key={inst.id}>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <div className={`w-3 h-3 rounded-full ${inst.status === 'connected' ? 'bg-green-500' : 'bg-red-500'}`} />
-                <div>
-                  <h3 className="font-semibold text-white">{inst.nome}</h3>
-                  <p className="text-sm text-slate-400">{inst.whatsappNumber}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl lg:col-span-1">
+          <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Instâncias</h2>
+          <div className="space-y-3">
+            {instancias.map((inst, idx) => (
+              <div key={idx} className="p-3 bg-[#111827] rounded-lg border border-[#1E293B] hover:border-[#8B5CF6]/50 transition-colors cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <div className={`w-2.5 h-2.5 rounded-full ${
+                    inst.status === 'Online' ? 'bg-[#10B981]' :
+                    inst.status === 'Offline' ? 'bg-[#EF4444]' : 'bg-[#F59E0B]'
+                  }`} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-[#F3F4F6] truncate">{inst.nome}</p>
+                    <p className="text-xs text-[#9CA3AF]">{inst.whatsapp}</p>
+                  </div>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="text-sm text-slate-400">Última atividade</p>
-                <p className="text-xs text-slate-500">{inst.lastActivity}</p>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl lg:col-span-1">
+          <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">QR Code</h2>
+          <div className="flex items-center justify-center h-64 bg-[#111827] rounded-lg border border-[#1E293B]">
+            <div className="text-center">
+              <div className="w-48 h-48 mx-auto bg-white p-4 rounded-lg">
+                <div className="w-full h-full bg-[#111827] flex items-center justify-center text-[#F3F4F6] font-bold text-sm">QR CODE</div>
               </div>
+              <p className="text-sm text-[#9CA3AF] mt-4">Escaneie para conectar</p>
             </div>
-          </Card>
-        ))}
+          </div>
+        </Card>
+
+        <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl lg:col-span-1">
+          <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Status</h2>
+          <div className="space-y-4">
+            {[
+              { label: 'Instância ID', value: 'auto_brito_01' },
+              { label: 'Webhook URL', value: 'https://api.kera.../webhook' },
+              { label: 'Conexão', value: 'Estabelecida', color: 'text-[#10B981]' },
+              { label: 'Última atividade', value: '2 min atrás' },
+              { label: 'Mensagens enviadas', value: '1.234' },
+              { label: 'Qualidade', value: '98%' },
+            ].map((item, idx) => (
+              <div key={idx} className="flex justify-between items-center py-2 border-b border-[#1E293B] last:border-0">
+                <span className="text-sm text-[#9CA3AF]">{item.label}</span>
+                <span className={`text-sm font-medium text-[#F3F4F6] ${item.color || ''}`}>{item.value}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
       </div>
     </div>
   );

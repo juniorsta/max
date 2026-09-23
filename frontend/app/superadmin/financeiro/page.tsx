@@ -12,67 +12,55 @@ const transacoes = [
 export default function FinanceiroPage() {
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Financeiro</h1>
-          <p className="text-slate-400 mt-1">Acompanhe receitas, despesas e lucros</p>
-        </div>
-        <div className="flex gap-2">
-          <select className="bg-[#0F172A] border border-[#334155] rounded-lg px-3 py-2 text-white text-sm">
-            <option>Este mês</option>
-            <option>Mês anterior</option>
-          </select>
-        </div>
+      <div>
+        <h1 className="text-[32px] font-bold text-[#F3F4F6]">Financeiro</h1>
+        <p className="text-[#9CA3AF] mt-1">Acompanhe receitas, despesas e lucros</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <p className="text-sm text-slate-400">Receita Total</p>
-          <p className="text-3xl font-bold text-white mt-1">R$ 148.500</p>
-        </Card>
-        <Card>
-          <p className="text-sm text-slate-400">Receitas</p>
-          <p className="text-3xl font-bold text-green-400 mt-1">R$ 142.300</p>
-        </Card>
-        <Card>
-          <p className="text-sm text-slate-400">Despesas</p>
-          <p className="text-3xl font-bold text-red-400 mt-1">R$ 18.200</p>
-        </Card>
-        <Card>
-          <p className="text-sm text-slate-400">Lucro</p>
-          <p className="text-3xl font-bold text-white mt-1">R$ 124.100</p>
-        </Card>
+        {[
+          { label: 'Receita Total', value: 'R$ 148.500', icon: '💰' },
+          { label: 'Receitas', value: 'R$ 142.300', icon: '📈', color: 'text-[#10B981]' },
+          { label: 'Despesas', value: 'R$ 18.200', icon: '📉', color: 'text-[#EF4444]' },
+          { label: 'Lucro', value: 'R$ 124.100', icon: '💎' },
+        ].map((item, idx) => (
+          <Card key={idx} className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium text-[#9CA3AF]">{item.label}</p>
+                <p className={`text-[32px] font-bold mt-2 ${item.color || 'text-[#F3F4F6]'}`}>{item.value}</p>
+              </div>
+              <span className="text-2xl">{item.icon}</span>
+            </div>
+          </Card>
+        ))}
       </div>
 
-      <Card>
-        <h2 className="text-lg font-semibold text-white mb-4">Últimas Transações</h2>
+      <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
+        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Histórico de Transações</h2>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full">
             <thead>
-              <tr className="text-left text-slate-400 border-b border-[#334155]">
-                <th className="pb-3 pr-4">Data</th>
-                <th className="pb-3 pr-4">Descrição</th>
-                <th className="pb-3 pr-4">Tipo</th>
-                <th className="pb-3 pr-4">Valor</th>
-                <th className="pb-3">Saldo</th>
+              <tr className="border-b border-[#1E293B]">
+                {['Data', 'Descrição', 'Tipo', 'Valor', 'Saldo'].map(h => (
+                  <th key={h} className="text-left text-sm font-medium text-[#9CA3AF] pb-3">{h}</th>
+                ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#334155]">
+            <tbody className="divide-y divide-[#1E293B]">
               {transacoes.map((t, idx) => (
-                <tr key={idx} className="hover:bg-[#0F172A]/50">
-                  <td className="py-3 pr-4 text-slate-400">{t.data}</td>
-                  <td className="py-3 pr-4 text-white">{t.descricao}</td>
-                  <td className="py-3 pr-4">
-                    <span className={`px-2 py-0.5 rounded text-xs ${
-                      t.tipo === 'receita' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-                    }`}>
+                <tr key={idx} className="hover:bg-[#111827]/50">
+                  <td className="py-3 text-[#9CA3AF]">{t.data}</td>
+                  <td className="py-3 text-[#F3F4F6]">{t.descricao}</td>
+                  <td className="py-3">
+                    <span className={`px-3 py-1 rounded-full text-xs ${t.tipo === 'receita' ? 'bg-[#10B981]/20 text-[#10B981]' : 'bg-[#EF4444]/20 text-[#EF4444]'}`}>
                       {t.tipo === 'receita' ? 'Receita' : 'Despesa'}
                     </span>
                   </td>
-                  <td className={`py-3 pr-4 font-medium ${t.valor >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  <td className={`py-3 font-medium ${t.valor >= 0 ? 'text-[#10B981]' : 'text-[#EF4444]'}`}>
                     {t.valor >= 0 ? '+' : ''}R$ {t.valor.toFixed(2)}
                   </td>
-                  <td className="py-3 text-slate-400">R$ {t.saldo.toFixed(2)}</td>
+                  <td className="py-3 text-[#9CA3AF]">R$ {t.saldo.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
