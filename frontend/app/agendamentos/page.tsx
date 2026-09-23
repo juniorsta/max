@@ -64,7 +64,7 @@ export default function AgendamentosPage() {
   const fetchLeads = async () => {
     try {
       const res = await api.get<{ id: string; nome: string | null; telefone: string }[]>(`/api/v1/leads?perPage=100`);
-      setLeads(res.data);
+      setLeads(res);
     } catch (e) {
       console.error(e);
     }
