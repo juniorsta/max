@@ -18,8 +18,7 @@ router.post('/whatsapp', validateWebhookSecret, async (req, res) => {
     if (!remoteJid) return res.status(400).json({ error: 'Payload inválido' });
 
     const telefone = remoteJid.replace('@s.whatsapp.net', '').replace(/\D/g, '');
-    const tenantId = req.headers['x-tenant-id'] as string;
-    
+    const tenantId = req.headers['x-tenant-id'];
     if (!tenantId) return res.status(400).json({ error: 'Tenant não identificado' });
 
     // Upsert lead
