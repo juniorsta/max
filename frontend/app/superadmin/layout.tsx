@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAuth } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
+import { AppLayout } from '@/components/AppLayout';
 
 export default function SuperadminLayout({ children }: { children: React.ReactNode }) {
-  const { user, token } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -16,8 +17,16 @@ export default function SuperadminLayout({ children }: { children: React.ReactNo
   }, [user, router]);
 
   if (!user || user.role !== 'superadmin') {
-    return <div className="p-6 text-white">Carregando...</div>;
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-white">Carregando...</div>
+      </div>
+    );
   }
 
-  return <>{children}</>;
+  return (
+    <AppLayout>
+      {children}
+    </AppLayout>
+  );
 }
