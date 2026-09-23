@@ -23,13 +23,14 @@ export default function LoginPage() {
     try {
       await login(email, senha);
       
-      // Redireciona com base no role
-      if (user?.role === 'superadmin') {
-        router.push('/superadmin/dashboard');
-      } else {
-        router.push('/dashboard');
-      }
-      router.refresh();
+      // Redirect based on role after user is set
+      setTimeout(() => {
+        if (user?.role === 'superadmin') {
+          router.push('/superadmin/dashboard');
+        } else {
+          router.push('/dashboard');
+        }
+      }, 100);
     } catch (e: any) {
       setError(e.message || 'Erro ao fazer login');
     } finally {
