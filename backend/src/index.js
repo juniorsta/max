@@ -33,13 +33,12 @@ app.use('/api/v1', (req, res, next) => {
   if (req.path.startsWith('/auth/')) return next();
   resolveTenant(req, res, next);
 });
-app.use('/api/v1', requireTenant);
 
-// Protected routes
-app.use('/api/v1/companies', authMiddleware, companiesRouter);
-app.use('/api/v1/leads', authMiddleware, leadsRouter);
-app.use('/api/v1/conversations', authMiddleware, conversationsRouter);
-app.use('/api/v1/dashboard', authMiddleware, dashboardRouter);
+// Protected routes with auth + tenant
+app.use('/api/v1/companies', authMiddleware, requireTenant, companiesRouter);
+app.use('/api/v1/leads', authMiddleware, requireTenant, leadsRouter);
+app.use('/api/v1/conversations', authMiddleware, requireTenant, conversationsRouter);
+app.use('/api/v1/dashboard', authMiddleware, requireTenant, dashboardRouter);
 
 // Webhook - no auth, only secret
 app.use('/api/v1/webhooks', validateWebhookSecret, webhookRouter);
