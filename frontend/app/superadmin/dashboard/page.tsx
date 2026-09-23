@@ -16,11 +16,11 @@ export default function SuperadminDashboard() {
   }, [user]);
 
   const fetchDashboard = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/dashboard`, {
-        headers: { Authorization: \`Bearer \${token}\` }
-      });
+      try {
+        setLoading(true);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/dashboard`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
       if (!res.ok) throw new Error('Failed to fetch');
       const result = await res.json();
       setData(result);
