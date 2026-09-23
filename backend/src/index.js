@@ -20,6 +20,7 @@ app.use('/api/v1/appointments', require('./routes/appointments'));
 app.use('/api/v1/conversations', require('./routes/conversations'));
 app.use('/api/v1/ia', require('./routes/ia'));
 app.use('/api/v1/webhooks', require('./routes/webhook'));
+app.use('/api/v1/superadmin', require('./routes/superadmin'));
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
