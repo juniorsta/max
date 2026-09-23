@@ -112,7 +112,8 @@ router.post('/register', validate(registerSchema), async (req, res) => {
       },
     });
   } catch (e) {
-    res.status(500).json({ error: 'Erro no registro' });
+    const errorMessage = e instanceof Error ? e.message : 'Erro desconhecido';
+    res.status(500).json({ error: `Erro no registro: ${errorMessage}` });
   }
 });
 
