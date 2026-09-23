@@ -202,13 +202,15 @@ router.get('/me', authMiddleware, async (req, res) => {
 });
 
 // Seed superadmin (admin only - remove after use)
-router.post('/seed-superadmin', validate({
+const seedSuperadminSchema = z.object({
   body: z.object({
     nome: z.string().min(1),
     email: z.string().email(),
     senha: z.string().min(6),
   })
-}), async (req, res) => {
+});
+
+router.post('/seed-superadmin', validate(seedSuperadminSchema), async (req, res) => {
   const { nome, email, senha } = req.body;
   const existing = await prisma.usuario.findFirst({ where: { email } });
   if (existing) return res.status(400).json({ error: 'Email já existe' });
