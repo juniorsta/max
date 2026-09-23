@@ -5,143 +5,175 @@ const prisma = new PrismaClient();
 
 const router = express.Router();
 
-// Superadmin middleware
 const requireSuperadmin = (req, res, next) => {
   if (req.user.role !== 'superadmin') {
-    return res.status(403).json({ error: 'Acesso negado - Superadmin apenas' });
+    return res.status(403).json({ error: 'Acesso negado' });
   }
   next();
 };
 
-// Dashboard Global
+async function getConversasPorDia() {
+  const result = [];
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    const start = new Date(date.setHours(0, 0, 0, 0));
+    const end = new Date(date.setHours(23, 59, 59, 999));
+    const count = await prisma.conversa.count({
+      where: { timestamp: { gte: start, lte: end } }
+    });
+    result.push({ date: start.toISOString().split('T')[0], count });
+  }
+  return result;
+}
+
+async function getCrescimentoClientes() {
+  const result = [];
+  for (let i = 11; i >= 0; i--) {
+    const date = new Date();
+    date.setMonth(date.getMonth() - i);
+    const start = new Date(date.getFullYear(), date.getMonth(), 1);
+    const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    const count = await prisma.empresa.count({
+      where: { createdAt: { gte: start, lte: end } }
+    });
+    result.push({ month: start.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }), count });
+  }
+  return result;
+}
+
+async function getNovosLeadsPorDia() {
+  const result = [];
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    const start = new Date(date.setHours(0, 0, 0, 0));
+    const end = new Date(date.setHours(23, 59, 59, 999));
+    const count = await prisma.lead.count({
+      where: { createdAt: { gte: start, lte: end } }
+    });
+    result.push({ date: start.toISOString().split('T')[0], count });
+  }
+  return result;
+}
+
+async function getAgendamentosPorSemana() {
+  const result = [];
+  for (let i = 11; i >= 0; i--) {
+    const start = new Date();
+    start.setDate(start.getDate() - (i * 7 + 6));
+    const end = new Date();
+    end.setDate(end.getDate() - (i * 7));
+    const count = await prisma.agendamento.count({
+      where: { data: { gte: start, lte: end } }
+    });
+    result.push({ week: `Semana ${12 - i}`, count });
+  }
+  return result;
+}
+
+async function getErrosSistema() {
+  try {
+    const now = new Date();
+    const todayStart = new Date(now.setHours(0, 0, 0, 0));
+    const hoje = await prisma.$queryRaw`
+      SELECT COUNT(*) as count FROM "Conversa" 
+      WHERE "timestamp" >= ${todayStart} 
+      AND "direction" = 'incoming'
+      AND "mensagem" ILIKE '%erro%'
+    `;
+    return Number(hoje[0]?.count || 0);
+  } catch {
+    return 0;
+  }
+}
+
 router.get('/dashboard', authMiddleware, requireSuperadmin, async (req, res) => {
   try {
+    const now = new Date();
+    const todayStart = new Date(now);
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = new Date(now);
+    todayEnd.setHours(23, 59, 59, 999);
+
     const [
       empresasAtivas,
       empresasBloqueadas,
       empresasTeste,
+      empresasCanceladas,
       usuariosTotais,
       leadsHoje,
       conversasHoje,
-      mensagensEnviadas,
-      mensagensRecebidas,
+      mensagensEnviadasHoje,
+      mensagensRecebidasHoje,
       agendamentosHoje,
-      receitaMensal,
-      churn,
-      usoIA,
-      custosIA,
-      errosSistema,
+      totalLeads,
+      totalConversas,
+      totalMensagensEnviadas,
+      totalMensagensRecebidas,
+      totalAgendamentos,
       conversasPorDia,
       crescimentoClientes,
-      usoIADiario,
-      novosLeads,
-      agendamentosSemanai
+      novosLeadsPorDia,
+      agendamentosPorSemana,
+      errosHoje
     ] = await Promise.all([
       prisma.empresa.count({ where: { status: 'active' } }),
       prisma.empresa.count({ where: { status: 'blocked' } }),
       prisma.empresa.count({ where: { status: 'trial' } }),
+      prisma.empresa.count({ where: { status: 'cancelled' } }),
       prisma.usuario.count(),
-      prisma.lead.count({ 
-        where: { 
-          createdAt: { gte: new Date(new Date().setHours(0,0,0,0)) }
-        }
-      }),
-      prisma.conversa.count({
-        where: {
-          timestamp: { gte: new Date(new Date().setHours(0,0,0,0)) }
-        }
-      }),
-      prisma.conversa.count({ 
-        where: { 
-          direction: 'outgoing',
-          timestamp: { gte: new Date(new Date().setHours(0,0,0,0)) }
-        }
-      }),
-      prisma.conversa.count({
-        where: {
-          direction: 'incoming',
-          timestamp: { gte: new Date(new Date().setHours(0,0,0,0)) }
-        }
-      }),
-      prisma.agendamento.count({
-        where: {
-          data: { gte: new Date(new Date().setHours(0,0,0,0)) }
-        }
-      }),
-      prisma.empresa.aggregate({
-        _sum: { /* placeholder for MRR */ }
-      }),
-      // Churn calculation placeholder
-      Promise.resolve({ value: 2.5 }),
-      Promise.resolve({ requests: 12500, tokens: 850000 }),
-      Promise.resolve({ amount: 450.00 }),
-      Promise.resolve({ count: 3 }),
-      // Last 30 days conversations
-      Promise.all(
-        Array.from({ length: 30 }, async (_, i) => {
-          const date = new Date();
-          date.setDate(date.getDate() - (29 - i));
-          const start = new Date(date.setHours(0,0,0,0));
-          const end = new Date(date.setHours(23,59,59,999));
-          const count = await prisma.conversa.count({
-            where: { timestamp: { gte: start, lte: end } }
-          });
-          return { date: start.toISOString().split('T')[0], count };
-        })
-      ),
-      // Growth clients last 12 months
-      Promise.all(
-        Array.from({ length: 12 }, async (_, i) => {
-          const date = new Date();
-          date.setMonth(date.getMonth() - (11 - i));
-          const start = new Date(date.getFullYear(), date.getMonth(), 1);
-          const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-          const count = await prisma.empresa.count({
-            where: { createdAt: { gte: start, lte: end } }
-          });
-          return { month: start.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }), count };
-        })
-      ),
-      // IA usage daily
-      Promise.resolve([
-        { date: '2024-01-01', requests: 100 },
-        { date: '2024-01-02', requests: 150 }
-      ]),
-      // New leads daily
-      Promise.resolve([
-        { date: '2024-01-01', count: 25 },
-        { date: '2024-01-02', count: 30 }
-      ]),
-      // Appointments weekly
-      Promise.resolve([
-        { week: 'Semana 1', count: 45 },
-        { week: 'Semana 2', count: 52 }
-      ])
+      prisma.lead.count({ where: { createdAt: { gte: todayStart, lte: todayEnd } } }),
+      prisma.conversa.count({ where: { timestamp: { gte: todayStart, lte: todayEnd } } }),
+      prisma.conversa.count({ where: { direction: 'outgoing', timestamp: { gte: todayStart, lte: todayEnd } } }),
+      prisma.conversa.count({ where: { direction: 'incoming', timestamp: { gte: todayStart, lte: todayEnd } } }),
+      prisma.agendamento.count({ where: { data: { gte: todayStart, lte: todayEnd } } }),
+      prisma.lead.count(),
+      prisma.conversa.count(),
+      prisma.conversa.count({ where: { direction: 'outgoing' } }),
+      prisma.conversa.count({ where: { direction: 'incoming' } }),
+      prisma.agendamento.count(),
+      getConversasPorDia(),
+      getCrescimentoClientes(),
+      getNovosLeadsPorDia(),
+      getAgendamentosPorSemana(),
+      getErrosSistema()
     ]);
+
+    const totalEmpresas = empresasAtivas + empresasBloqueadas + empresasTeste + empresasCanceladas;
+    const receitaMensal = empresasAtivas * 497;
+    const churn = totalEmpresas > 0 ? parseFloat(((empresasCanceladas / totalEmpresas) * 100).toFixed(1)) : 0;
+    const usoIA = totalMensagensEnviadas;
+    const custosIA = parseFloat((usoIA * 0.0001).toFixed(2));
 
     res.json({
       kpis: {
         empresasAtivas,
         empresasBloqueadas,
         empresasTeste,
+        empresasCanceladas,
         usuariosTotais,
         leadsHoje,
         conversasHoje,
-        mensagensEnviadas,
-        mensagensRecebidas,
+        mensagensEnviadas: mensagensEnviadasHoje,
+        mensagensRecebidas: mensagensRecebidasHoje,
         agendamentosHoje,
-        receitaMensal: 125000,
-        churn: 2.5,
-        usoIA: 12500,
-        custosIA: 450.00
+        totalLeads,
+        totalConversas,
+        totalMensagensEnviadas,
+        totalMensagensRecebidas,
+        totalAgendamentos,
+        receitaMensal,
+        churn,
+        usoIA,
+        custosIA
       },
       graficos: {
         conversasPorDia,
         crescimentoClientes,
-        usoIADiario: usoIADiario,
-        novosLeads,
-        agendamentosSemanal: agendamentosSemanai,
-        errosSistema: errosSistema.count
+        novosLeadsPorDia,
+        agendamentosPorSemana,
+        errosSistema: errosHoje
       }
     });
   } catch (e) {
