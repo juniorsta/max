@@ -190,4 +190,15 @@ router.get('/users', authMiddleware, async (req, res) => {
   res.json(usuarios);
 });
 
+// GET /me - retorna usuário atual (usado pelo frontend após login)
+router.get('/me', authMiddleware, async (req, res) => {
+  res.json({
+    id: req.user.id,
+    nome: req.user.nome,
+    email: req.user.email,
+    role: req.user.role,
+    empresa: { id: req.user.empresa.id, nome: req.user.empresa.nome },
+  });
+});
+
 export default router;
