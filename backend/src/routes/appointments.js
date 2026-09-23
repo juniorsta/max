@@ -12,7 +12,7 @@ const {
   updateAppointment,
   deleteAppointment,
   sendReminders,
-} from '../services/appointments.js';
+} = require('../services/appointments.js');
 
 const router = express.Router();
 const prisma = new PrismaClient();
