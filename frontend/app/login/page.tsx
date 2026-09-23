@@ -10,7 +10,7 @@ import { Card } from '../../components/Card';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, user } = useAuth();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [error, setError] = useState('');
@@ -21,16 +21,14 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      await login(email, senha);
+      const user = await login(email, senha);
       
-      // Redirect based on role after user is set
-      setTimeout(() => {
-        if (user?.role === 'superadmin') {
-          router.push('/superadmin/dashboard');
-        } else {
-          router.push('/dashboard');
-        }
-      }, 100);
+      // Redireciona baseado no role retornado pelo login
+      if (user?.role === 'superadmin') {
+        router.push('/superadmin/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
     } catch (e: any) {
       setError(e.message || 'Erro ao fazer login');
     } finally {
