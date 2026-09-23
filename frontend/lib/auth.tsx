@@ -39,7 +39,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const data = await res.json();
     setToken(data.token);
     localStorage.setItem('token', data.token);
-    setUser(data.user);
+    
+    // Fetch full user data after login
+    const meRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/me`, {
+      headers: { Authorization: `Bearer ${data.token}` }
+    });
+    if (meRes.ok) {
+      const userData = await meRes.json();
+      setUser(userData);
+    }
   };
 
   const logout = () => {
