@@ -72,7 +72,7 @@ export default function IAPage() {
         message: testMessage,
         leadId: testLeadId || undefined,
       });
-      setTestResult({ classification: res });
+      setTestResult({ classification: res as any });
     } catch (e) {
       alert('Erro ao testar classificação');
     } finally {
@@ -88,7 +88,7 @@ export default function IAPage() {
         message: testMessage,
         leadId: testLeadId || undefined,
       });
-      setTestResult({ response: res.response });
+      setTestResult({ response: (res as any).response });
     } catch (e) {
       alert('Erro ao testar resposta');
     } finally {
@@ -104,7 +104,7 @@ export default function IAPage() {
         message: testMessage,
         leadId: testLeadId,
       });
-      setTestResult({ suggestedStage: res.suggestedStage });
+      setTestResult({ suggestedStage: (res as any).suggestedStage });
     } catch (e) {
       alert('Erro ao testar sugestão de etapa');
     } finally {
