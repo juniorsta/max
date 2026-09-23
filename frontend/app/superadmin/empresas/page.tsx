@@ -4,147 +4,106 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth';
 import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
-import { Input } from '@/components/Input';
 
 interface Empresa {
   id: string;
   nome: string;
-  razaoSocial: string;
-  cnpj: string;
-  plano: string;
-  status: string;
-  cidade: string;
+  plano: 'Starter' | 'Profissional' | 'Enterprise';
+  status: 'Ativo' | 'Inativo' | 'Teste';
   usuarios: number;
   createdAt: string;
 }
 
 export default function EmpresasPage() {
-  const { user, token } = useAuth();
+  const { token } = useAuth();
   const [empresas, setEmpresas] = useState<Empresa[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    if (!token) return;
-    fetchEmpresas();
+    setEmpresas([
+      { id: '1', nome: 'AutoBike Estética', plano: 'Enterprise', status: 'Ativo', usuarios: 12, createdAt: '2025-01-12' },
+      { id: '2', nome: 'Detal Garage LTDA', plano: 'Profissional', status: 'Ativo', usuarios: 8, createdAt: '2025-03-15' },
+      { id: '3', nome: 'Prime Clean', plano: 'Starter', status: 'Teste', usuarios: 3, createdAt: '2025-05-22' },
+      { id: '4', nome: '22 Motors', plano: 'Profissional', status: 'Inativo', usuarios: 5, createdAt: '2025-04-08' },
+    ]);
   }, [token]);
 
-  const fetchEmpresas = async () => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/companies?search=${search}&page=1&limit=20`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
-      setEmpresas(data.data || []);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Ativo': return 'bg-[#10B981]/20 text-[#10B981]';
+      case 'Inativo': return 'bg-[#EF4444]/20 text-[#EF4444]';
+      case 'Teste': return 'bg-[#F59E0B]/20 text-[#F59E0B]';
+      default: return 'bg-[#6B7280]/20 text-[#9CA3AF]';
     }
   };
-
-  const changeStatus = async (id: string, status: string) => {
-    try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/companies/${id}/status`, {
-        method: 'PATCH',
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ status })
-      });
-      fetchEmpresas();
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  if (loading) {
-    return <div className="flex items-center justify-center h-64"><div className="text-purple-400">Carregando...</div></div>;
-  }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-white">Gestão de Empresas</h1>
-          <p className="text-slate-400 mt-1">Cadastre, gerencie e controle todas as empresas da plataforma</p>
+          <h1 className="text-[32px] font-bold text-[#F3F4F6]">Gestão de Empresas</h1>
+          <p className="text-[#9CA3AF] mt-1">Gerencie todas as empresas da plataforma</p>
         </div>
-        <Button onClick={() => setShowForm(!showForm)}>+ Nova Empresa</Button>
+        <Button className="bg-[#8B5CF6] hover:bg-[#7C3AED]">+ Nova Empresa</Button>
       </div>
 
-      {showForm && (
-        <Card>
-          <h2 className="text-lg font-semibold text-white mb-4">Formulário de cadastro de um novo tenant</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="Nome da Empresa" placeholder="Ex: AutoBike Estética" />
-            <Input label="Razão Social" placeholder="Ex: AutoBike Ltda ME" />
-            <Input label="CNPJ" placeholder="00.000.000/0000-00" />
-            <Input label="Telefone" placeholder="(11) 99999-9999" />
-            <Input label="WhatsApp" placeholder="(11) 99999-9999" />
-            <Input label="E-mail" type="email" placeholder="contato@empresa.com" />
-            <Input label="Cidade" placeholder="São Paulo" />
-            <select className="bg-[#0F172A] border border-[#334155] rounded-lg px-4 py-2 text-white">
-              <option value="">Selecione o Estado</option>
-              <option value="SP">São Paulo</option>
-              <option value="RJ">Rio de Janeiro</option>
-              <option value="MG">Minas Gerais</option>
-            </select>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-300 mb-1">Plano</label>
-              <select className="w-full bg-[#0F172A] border border-[#334155] rounded-lg px-4 py-2 text-white">
-                <option value="starter">Starter - R$ 97/mês</option>
-                <option value="pro">Profissional - R$ 197/mês</option>
-                <option value="enterprise">Enterprise - R$ 397/mês</option>
-              </select>
-            </div>
-            <div className="md:col-span-2 flex justify-end gap-2">
-              <Button variant="ghost" onClick={() => setShowForm(false)}>Cancelar</Button>
-              <Button>Próximo</Button>
-            </div>
-          </div>
-        </Card>
-      )}
+      <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-[20px] font-semibold text-[#F3F4F6]">Empresas Cadastradas</h2>
+          <input
+            type="text"
+            placeholder="Buscar empresa..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-64 px-4 py-2 bg-[#111827] border border-[#1E293B] rounded-lg text-[#F3F4F6] placeholder-[#9CA3AF] text-sm focus:outline-none focus:border-[#8B5CF6]"
+          />
+        </div>
 
-      <Input 
-        placeholder="Buscar empresa..." 
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-      />
-
-      <div className="space-y-3">
-        {empresas.map(emp => (
-          <Card key={emp.id}>
-            <div className="flex justify-between items-start">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold">
-                  {emp.nome[0]}
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">{emp.nome}</h3>
-                  <p className="text-sm text-slate-400">{emp.plano} • {emp.cidade}</p>
-                  <p className="text-xs text-slate-500 mt-1">Criado em: {new Date(emp.createdAt).toLocaleDateString('pt-BR')}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  emp.status === 'active' ? 'bg-green-500/20 text-green-400' :
-                  emp.status === 'blocked' ? 'bg-red-500/20 text-red-400' :
-                  'bg-yellow-500/20 text-yellow-400'
-                }`}>
-                  {emp.status === 'active' ? '🟢 Ativo' :
-                   emp.status === 'blocked' ? '🔴 Bloqueado' :
-                   '🟡 Teste'}
-                </span>
-                <Button size="sm" variant="ghost" onClick={() => changeStatus(emp.id, emp.status === 'active' ? 'blocked' : 'active')}>
-                  {emp.status === 'active' ? 'Bloquear' : 'Ativar'}
-                </Button>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-[#1E293B]">
+                {['Nome', 'Plano', 'Status', 'Usuários', 'Criado em', 'Ações'].map(h => (
+                  <th key={h} className="text-left text-sm font-medium text-[#9CA3AF] pb-3">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#1E293B]">
+              {empresas.filter(e => e.nome.toLowerCase().includes(search.toLowerCase())).map(emp => (
+                <tr key={emp.id} className="hover:bg-[#111827]/50 transition-colors">
+                  <td className="py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#2563EB] flex items-center justify-center text-white font-bold">
+                        {emp.nome[0]}
+                      </div>
+                      <span className="font-medium text-[#F3F4F6]">{emp.nome}</span>
+                    </div>
+                  </td>
+                  <td className="py-4">
+                    <span className="px-3 py-1 rounded-full text-xs bg-[#111827] border border-[#1E293B] text-[#F3F4F6]">
+                      {emp.plano}
+                    </span>
+                  </td>
+                  <td className="py-4">
+                    <span className={`px-3 py-1 rounded-full text-xs ${getStatusColor(emp.status)}`}>
+                      {emp.status === 'Ativo' ? '🟢 ' : emp.status === 'Inativo' ? '🔴 ' : '🟡 '}{emp.status}
+                    </span>
+                  </td>
+                  <td className="py-4 text-[#9CA3AF]">{emp.usuarios}</td>
+                  <td className="py-4 text-[#9CA3AF]">{new Date(emp.createdAt).toLocaleDateString('pt-BR')}</td>
+                  <td className="py-4">
+                    <div className="flex gap-2">
+                      <button className="text-[#9CA3AF] hover:text-[#F3F4F6]">Entrar</button>
+                      <button className="text-[#9CA3AF] hover:text-[#F3F4F6]">Editar</button>
+                      <button className="text-[#EF4444] hover:text-[#FCA5A5]">Suspender</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
     </div>
   );
 }
