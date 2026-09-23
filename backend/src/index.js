@@ -27,13 +27,6 @@ app.get('/health', (req, res) => res.json({ status: 'ok' }));
 // Public auth routes (no tenant resolution needed - JWT has empresaId)
 app.use('/api/v1/auth', authRouter);
 
-// Tenant resolution for protected API routes
-app.use('/api/v1', (req, res, next) => {
-  // Skip tenant resolution for auth routes
-  if (req.path.startsWith('/auth/')) return next();
-  resolveTenant(req, res, next);
-});
-
 // Protected routes with auth + tenant
 app.use('/api/v1/companies', authMiddleware, requireTenant, companiesRouter);
 app.use('/api/v1/leads', authMiddleware, requireTenant, leadsRouter);
