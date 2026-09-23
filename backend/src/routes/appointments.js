@@ -11,7 +11,7 @@ import {
   updateAppointment,
   deleteAppointment,
   sendReminders,
-} from '../services/appointments.js';
+} from '../services/appointments.js');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -41,7 +41,6 @@ const querySchema = z.object({
   }),
 });
 
-// Create appointment
 router.post('/', authMiddleware, requireTenant, validate(createAppointmentSchema), async (req, res) => {
   try {
     const appointment = await createAppointment({
@@ -57,7 +56,6 @@ router.post('/', authMiddleware, requireTenant, validate(createAppointmentSchema
   }
 });
 
-// List appointments
 router.get('/', authMiddleware, requireTenant, validate(querySchema), async (req, res) => {
   try {
     const filters = {
@@ -72,7 +70,6 @@ router.get('/', authMiddleware, requireTenant, validate(querySchema), async (req
   }
 });
 
-// Get appointment by ID
 router.get('/:id', authMiddleware, requireTenant, async (req, res) => {
   try {
     const appointment = await getAppointmentById(req.params.id);
@@ -85,7 +82,6 @@ router.get('/:id', authMiddleware, requireTenant, async (req, res) => {
   }
 });
 
-// Update appointment
 router.patch('/:id', authMiddleware, requireTenant, validate(updateAppointmentSchema), async (req, res) => {
   try {
     const appointment = await getAppointmentById(req.params.id);
@@ -93,7 +89,7 @@ router.patch('/:id', authMiddleware, requireTenant, validate(updateAppointmentSc
       return res.status(404).json({ error: 'Agendamento não encontrado' });
     }
 
-    const updateData: any = {};
+    const updateData = {};
     if (req.body.data) updateData.data = new Date(req.body.data);
     if (req.body.status) updateData.status = req.body.status;
     if (req.body.observacoes !== undefined) updateData.observacoes = req.body.observacoes;
@@ -105,7 +101,6 @@ router.patch('/:id', authMiddleware, requireTenant, validate(updateAppointmentSc
   }
 });
 
-// Delete appointment
 router.delete('/:id', authMiddleware, requireTenant, async (req, res) => {
   try {
     const appointment = await getAppointmentById(req.params.id);
@@ -119,7 +114,6 @@ router.delete('/:id', authMiddleware, requireTenant, async (req, res) => {
   }
 });
 
-// Send reminders (manual trigger)
 router.post('/send-reminders', authMiddleware, requireTenant, async (req, res) => {
   try {
     const count = await sendReminders();
