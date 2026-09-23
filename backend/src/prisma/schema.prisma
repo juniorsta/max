@@ -10,8 +10,11 @@ datasource db {
 model Empresa {
   id        String   @id @default(cuid())
   nome      String
+  razaoSocial String?
+  cnpj      String?
   plano     String   @default("basic")
-  status    String   @default("active")
+  status    String   @default("trial")
+  cidade    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -28,11 +31,12 @@ model Usuario {
   nome       String
   email      String
   senhaHash  String
-  role       String   @default("admin")
+  role       String   @default("user")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   empresa Empresa? @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  auditLogs AuditLog[]
 
   @@unique([empresaId, email])
   @@index([empresaId])
@@ -43,8 +47,10 @@ model Lead {
   empresaId  String
   telefone   String
   nome       String?
+  email      String?
   veiculo    String?
   etapa      String   @default("novo")
+  valorEstimado String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -76,6 +82,7 @@ model Agendamento {
   empresaId String
   data      DateTime
   status    String   @default("pendente")
+  observacao String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -84,4 +91,26 @@ model Agendamento {
 
   @@index([empresaId])
   @@index([leadId])
+  @@index([data])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  usuario   Usuario? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  acao      String
+  recurso   String?
+  ip        String?
+  userAgent String?
+  status    String   @default("success")
+  timestamp DateTime @default(now())
+
+  @@index([userId])
+  @@index([timestamp])
+}
+
+model SystemSettings {
+  id    String  @id @default(cuid())
+  key   String  @unique
+  valor String
 }
