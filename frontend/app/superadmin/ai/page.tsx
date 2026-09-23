@@ -15,13 +15,13 @@ export default function AIPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-[32px] font-bold text-[#F3F4F6]">IA & Modelos</h1>
-        <p className="text-[#9CA3AF] mt-1">Gerencie os provedores e modelos de IA</p>
+        <h1 className="text-[32px] font-bold text-[#F8FAFC]">IA & Modelos</h1>
+        <p className="text-[#94A3B8] mt-1">Gerencie os provedores e modelos de IA</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
-          { label: 'Provedores Conectados', value: '4', icon: '🔌', color: 'text-[#8B5CF6]' },
+          { label: 'Provedores Conectados', value: '4', icon: '🔌', color: 'text-[#6366F1]' },
           { label: 'Modelos Disponíveis', value: '12', icon: '🤖', color: 'text-[#2563EB]' },
           { label: 'Taxa de Sucesso', value: '89%', icon: '✅', color: 'text-[#10B981]' },
           { label: 'Requisições/min', value: '156', icon: '⚡', color: 'text-[#F59E0B]' },
@@ -29,7 +29,7 @@ export default function AIPage() {
           <Card key={idx} className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#9CA3AF]">{item.label}</p>
+                <p className="text-sm text-[#94A3B8]">{item.label}</p>
                 <p className={`text-[32px] font-bold mt-2 ${item.color}`}>{item.value}</p>
               </div>
               <span className="text-3xl">{item.icon}</span>
@@ -39,23 +39,23 @@ export default function AIPage() {
       </div>
 
       <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
-        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Modelos de IA</h2>
+        <h2 className="text-[20px] font-semibold text-[#F8FAFC] mb-4">Modelos de IA</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#1E293B]">
                 {['Modelo', 'Provedor', 'Latência', 'Custo por 1K tokens', 'Status'].map(h => (
-                  <th key={h} className="text-left text-sm font-medium text-[#9CA3AF] pb-3">{h}</th>
+                  <th key={h} className="text-left text-sm font-medium text-[#94A3B8] pb-3">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1E293B]">
               {modelos.map((m, idx) => (
-                <tr key={idx} className="hover:bg-[#111827]/50">
-                  <td className="py-4 font-mono text-sm text-[#F3F4F6]">{m.nome}</td>
-                  <td className="py-4 text-[#9CA3AF]">{m.provedor}</td>
-                  <td className="py-4 text-[#9CA3AF]">{m.latencia}ms</td>
-                  <td className="py-4 text-[#9CA3AF] text-sm">{m.custo}</td>
+                <tr key={idx} className="hover:bg-[#0F172A]/50">
+                  <td className="py-4 font-mono text-sm text-[#F8FAFC]">{m.nome}</td>
+                  <td className="py-4 text-[#94A3B8]">{m.provedor}</td>
+                  <td className="py-4 text-[#94A3B8]">{m.latencia}ms</td>
+                  <td className="py-4 text-[#94A3B8] text-sm">{m.custo}</td>
                   <td className="py-4">
                     <span className={`px-3 py-1 rounded-full text-xs ${
                       m.status === 'online' ? 'bg-[#10B981]/20 text-[#10B981]' :

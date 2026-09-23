@@ -17,10 +17,10 @@ export default function TemplatesPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-[32px] font-bold text-[#F3F4F6]">Templates</h1>
-          <p className="text-[#9CA3AF] mt-1">Templates prontos para uso rápido</p>
+          <h1 className="text-[32px] font-bold text-[#F8FAFC]">Templates</h1>
+          <p className="text-[#94A3B8] mt-1">Templates prontos para uso rápido</p>
         </div>
-        <Button className="bg-[#8B5CF6] hover:bg-[#7C3AED]">+ Novo Template</Button>
+        <Button className="bg-[#6366F1] hover:bg-[#4F46E5]">+ Novo Template</Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -35,8 +35,8 @@ export default function TemplatesPage() {
                 {t.novo && <span className="px-2 py-1 rounded-full text-xs bg-[#2563EB]/20 text-[#2563EB]">Novo</span>}
               </div>
             </div>
-            <h3 className="font-semibold text-[#F3F4F6]">{t.nome}</h3>
-            <p className="text-sm text-[#9CA3AF] mt-1">{t.desc}</p>
+            <h3 className="font-semibold text-[#F8FAFC]">{t.nome}</h3>
+            <p className="text-sm text-[#94A3B8] mt-1">{t.desc}</p>
           </Card>
         ))}
       </div>

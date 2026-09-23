@@ -8,12 +8,12 @@ export default function ComponentesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-[32px] font-bold text-[#F3F4F6]">Biblioteca de Componentes</h1>
-        <p className="text-[#9CA3AF] mt-1">Design system da plataforma KERA</p>
+        <h1 className="text-[32px] font-bold text-[#F8FAFC]">Biblioteca de Componentes</h1>
+        <p className="text-[#94A3B8] mt-1">Design system da plataforma KERA</p>
       </div>
 
       <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
-        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Botões</h2>
+        <h2 className="text-[20px] font-semibold text-[#F8FAFC] mb-4">Botões</h2>
         <div className="flex flex-wrap gap-3">
           <Button>Primário</Button>
           <Button variant="secondary">Secundário</Button>
@@ -27,7 +27,7 @@ export default function ComponentesPage() {
       </Card>
 
       <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
-        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Inputs</h2>
+        <h2 className="text-[20px] font-semibold text-[#F8FAFC] mb-4">Inputs</h2>
         <div className="max-w-md space-y-4">
           <Input label="Email" placeholder="seu@email.com" />
           <Input label="Senha" type="password" placeholder="Digite sua senha" error="Senha incorreta" />
@@ -35,10 +35,10 @@ export default function ComponentesPage() {
       </Card>
 
       <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
-        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Badges</h2>
+        <h2 className="text-[20px] font-semibold text-[#F8FAFC] mb-4">Badges</h2>
         <div className="flex flex-wrap gap-2">
           {['Ativo', 'Pendente', 'Bloqueado', 'Info', 'Premium'].map((badge, idx) => {
-            const colors = ['bg-[#10B981]/20 text-[#10B981]', 'bg-[#F59E0B]/20 text-[#F59E0B]', 'bg-[#EF4444]/20 text-[#EF4444]', 'bg-[#2563EB]/20 text-[#2563EB]', 'bg-[#8B5CF6]/20 text-[#8B5CF6]'];
+            const colors = ['bg-[#10B981]/20 text-[#10B981]', 'bg-[#F59E0B]/20 text-[#F59E0B]', 'bg-[#EF4444]/20 text-[#EF4444]', 'bg-[#2563EB]/20 text-[#2563EB]', 'bg-[#6366F1]/20 text-[#6366F1]'];
             return (
               <span key={idx} className={`px-3 py-1 rounded-full text-xs ${colors[idx]}`}>{badge}</span>
             );
@@ -47,7 +47,7 @@ export default function ComponentesPage() {
       </Card>
 
       <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
-        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Paleta de Cores</h2>
+        <h2 className="text-[20px] font-semibold text-[#F8FAFC] mb-4">Paleta de Cores</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { nome: 'Primária', hex: '#8B5CF6' },
@@ -61,35 +61,35 @@ export default function ComponentesPage() {
           ].map((color, idx) => (
             <div key={idx} className="text-center">
               <div className="w-full aspect-square rounded-lg mb-2" style={{ backgroundColor: color.hex }} />
-              <p className="text-sm font-medium text-[#F3F4F6]">{color.nome}</p>
-              <p className="text-xs text-[#9CA3AF] font-mono">{color.hex}</p>
+              <p className="text-sm font-medium text-[#F8FAFC]">{color.nome}</p>
+              <p className="text-xs text-[#94A3B8] font-mono">{color.hex}</p>
             </div>
           ))}
         </div>
       </Card>
 
       <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
-        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Tipografia</h2>
+        <h2 className="text-[20px] font-semibold text-[#F8FAFC] mb-4">Tipografia</h2>
         <div className="space-y-3">
           <div className="flex items-baseline gap-4">
-            <span className="text-[32px] font-bold text-[#F3F4F6]">H1 - 32px</span>
-            <span className="text-[#9CA3AF]">Bold</span>
+            <span className="text-[32px] font-bold text-[#F8FAFC]">H1 - 32px</span>
+            <span className="text-[#94A3B8]">Bold</span>
           </div>
           <div className="flex items-baseline gap-4">
-            <span className="text-[24px] font-semibold text-[#F3F4F6]">H2 - 24px</span>
-            <span className="text-[#9CA3AF]">Semibold</span>
+            <span className="text-[24px] font-semibold text-[#F8FAFC]">H2 - 24px</span>
+            <span className="text-[#94A3B8]">Semibold</span>
           </div>
           <div className="flex items-baseline gap-4">
-            <span className="text-[20px] font-medium text-[#F3F4F6]">H3 - 20px</span>
-            <span className="text-[#9CA3AF]">Medium</span>
+            <span className="text-[20px] font-medium text-[#F8FAFC]">H3 - 20px</span>
+            <span className="text-[#94A3B8]">Medium</span>
           </div>
           <div className="flex items-baseline gap-4">
-            <span className="text-[14px] text-[#F3F4F6]">Body - 14px</span>
-            <span className="text-[#9CA3AF]">Regular</span>
+            <span className="text-[14px] text-[#F8FAFC]">Body - 14px</span>
+            <span className="text-[#94A3B8]">Regular</span>
           </div>
           <div className="flex items-baseline gap-4">
-            <span className="text-[12px] text-[#9CA3AF]">Caption - 12px</span>
-            <span className="text-[#9CA3AF]">Regular</span>
+            <span className="text-[12px] text-[#94A3B8]">Caption - 12px</span>
+            <span className="text-[#94A3B8]">Regular</span>
           </div>
         </div>
       </Card>

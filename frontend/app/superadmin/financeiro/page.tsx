@@ -13,8 +13,8 @@ export default function FinanceiroPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-[32px] font-bold text-[#F3F4F6]">Financeiro</h1>
-        <p className="text-[#9CA3AF] mt-1">Acompanhe receitas, despesas e lucros</p>
+        <h1 className="text-[32px] font-bold text-[#F8FAFC]">Financeiro</h1>
+        <p className="text-[#94A3B8] mt-1">Acompanhe receitas, despesas e lucros</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -27,8 +27,8 @@ export default function FinanceiroPage() {
           <Card key={idx} className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-[#9CA3AF]">{item.label}</p>
-                <p className={`text-[32px] font-bold mt-2 ${item.color || 'text-[#F3F4F6]'}`}>{item.value}</p>
+                <p className="text-sm font-medium text-[#94A3B8]">{item.label}</p>
+                <p className={`text-[32px] font-bold mt-2 ${item.color || 'text-[#F8FAFC]'}`}>{item.value}</p>
               </div>
               <span className="text-2xl">{item.icon}</span>
             </div>
@@ -37,21 +37,21 @@ export default function FinanceiroPage() {
       </div>
 
       <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
-        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Histórico de Transações</h2>
+        <h2 className="text-[20px] font-semibold text-[#F8FAFC] mb-4">Histórico de Transações</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#1E293B]">
                 {['Data', 'Descrição', 'Tipo', 'Valor', 'Saldo'].map(h => (
-                  <th key={h} className="text-left text-sm font-medium text-[#9CA3AF] pb-3">{h}</th>
+                  <th key={h} className="text-left text-sm font-medium text-[#94A3B8] pb-3">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1E293B]">
               {transacoes.map((t, idx) => (
-                <tr key={idx} className="hover:bg-[#111827]/50">
-                  <td className="py-3 text-[#9CA3AF]">{t.data}</td>
-                  <td className="py-3 text-[#F3F4F6]">{t.descricao}</td>
+                <tr key={idx} className="hover:bg-[#0F172A]/50">
+                  <td className="py-3 text-[#94A3B8]">{t.data}</td>
+                  <td className="py-3 text-[#F8FAFC]">{t.descricao}</td>
                   <td className="py-3">
                     <span className={`px-3 py-1 rounded-full text-xs ${t.tipo === 'receita' ? 'bg-[#10B981]/20 text-[#10B981]' : 'bg-[#EF4444]/20 text-[#EF4444]'}`}>
                       {t.tipo === 'receita' ? 'Receita' : 'Despesa'}
@@ -60,7 +60,7 @@ export default function FinanceiroPage() {
                   <td className={`py-3 font-medium ${t.valor >= 0 ? 'text-[#10B981]' : 'text-[#EF4444]'}`}>
                     {t.valor >= 0 ? '+' : ''}R$ {t.valor.toFixed(2)}
                   </td>
-                  <td className="py-3 text-[#9CA3AF]">R$ {t.saldo.toFixed(2)}</td>
+                  <td className="py-3 text-[#94A3B8]">R$ {t.saldo.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>

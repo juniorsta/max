@@ -18,10 +18,10 @@ export default function UsuariosPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-[32px] font-bold text-[#F3F4F6]">Gestão de Usuários</h1>
-          <p className="text-[#9CA3AF] mt-1">Gerencie todos os usuários da plataforma</p>
+          <h1 className="text-[32px] font-bold text-[#F8FAFC]">Gestão de Usuários</h1>
+          <p className="text-[#94A3B8] mt-1">Gerencie todos os usuários da plataforma</p>
         </div>
-        <Button className="bg-[#8B5CF6] hover:bg-[#7C3AED]">+ Novo Usuário</Button>
+        <Button className="bg-[#6366F1] hover:bg-[#4F46E5]">+ Novo Usuário</Button>
       </div>
 
       <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
@@ -30,34 +30,34 @@ export default function UsuariosPage() {
             <thead>
               <tr className="border-b border-[#1E293B]">
                 {['Nome', 'E-mail', 'Papel', 'Status', 'Criado em', 'Ações'].map(h => (
-                  <th key={h} className="text-left text-sm font-medium text-[#9CA3AF] pb-3">{h}</th>
+                  <th key={h} className="text-left text-sm font-medium text-[#94A3B8] pb-3">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1E293B]">
               {usuarios.map((u, idx) => (
-                <tr key={idx} className="hover:bg-[#111827]/50 transition-colors">
+                <tr key={idx} className="hover:bg-[#0F172A]/50 transition-colors">
                   <td className="py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#2563EB] flex items-center justify-center text-white font-bold">
                         {u.nome[0]}
                       </div>
-                      <span className="font-medium text-[#F3F4F6]">{u.nome}</span>
+                      <span className="font-medium text-[#F8FAFC]">{u.nome}</span>
                     </div>
                   </td>
-                  <td className="py-4 text-[#9CA3AF]">{u.email}</td>
+                  <td className="py-4 text-[#94A3B8]">{u.email}</td>
                   <td className="py-4">
-                    <span className="px-3 py-1 rounded-full text-xs bg-[#111827] border border-[#1E293B] text-[#F3F4F6]">{u.papel}</span>
+                    <span className="px-3 py-1 rounded-full text-xs bg-[#0F172A] border border-[#1E293B] text-[#F8FAFC]">{u.papel}</span>
                   </td>
                   <td className="py-4">
                     <span className={`px-3 py-1 rounded-full text-xs ${u.status === 'Ativo' ? 'bg-[#10B981]/20 text-[#10B981]' : 'bg-[#EF4444]/20 text-[#EF4444]'}`}>
                       {u.status === 'Ativo' ? '🟢 Ativo' : '🔴 Inativo'}
                     </span>
                   </td>
-                  <td className="py-4 text-[#9CA3AF]">{u.criado}</td>
+                  <td className="py-4 text-[#94A3B8]">{u.criado}</td>
                   <td className="py-4">
                     <div className="flex gap-3">
-                      <button className="text-[#9CA3AF] hover:text-[#F3F4F6]">✏️</button>
+                      <button className="text-[#94A3B8] hover:text-[#F8FAFC]">✏️</button>
                       <button className="text-[#EF4444] hover:text-[#FCA5A5]">🗑️</button>
                     </div>
                   </td>

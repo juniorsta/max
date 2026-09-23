@@ -16,15 +16,15 @@ export default function LogsPage() {
       case 'success': return 'text-[#10B981]';
       case 'warning': return 'text-[#F59E0B]';
       case 'error': return 'text-[#EF4444]';
-      default: return 'text-[#9CA3AF]';
+      default: return 'text-[#94A3B8]';
     }
   };
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-[32px] font-bold text-[#F3F4F6]">Logs e Auditoria</h1>
-        <p className="text-[#9CA3AF] mt-1">Histórico completo de ações na plataforma</p>
+        <h1 className="text-[32px] font-bold text-[#F8FAFC]">Logs e Auditoria</h1>
+        <p className="text-[#94A3B8] mt-1">Histórico completo de ações na plataforma</p>
       </div>
 
       <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
@@ -33,20 +33,20 @@ export default function LogsPage() {
             <thead>
               <tr className="border-b border-[#1E293B]">
                 {['Data/Hora', 'Usuário', 'Ação', 'Recurso', 'IP', 'Status'].map(h => (
-                  <th key={h} className="text-left text-sm font-medium text-[#9CA3AF] pb-3">{h}</th>
+                  <th key={h} className="text-left text-sm font-medium text-[#94A3B8] pb-3">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1E293B]">
               {logs.map((log, idx) => (
-                <tr key={idx} className="hover:bg-[#111827]/50">
-                  <td className="py-4 text-sm text-[#9CA3AF] whitespace-nowrap">{log.data}</td>
-                  <td className="py-4 text-sm text-[#F3F4F6]">{log.usuario}</td>
+                <tr key={idx} className="hover:bg-[#0F172A]/50">
+                  <td className="py-4 text-sm text-[#94A3B8] whitespace-nowrap">{log.data}</td>
+                  <td className="py-4 text-sm text-[#F8FAFC]">{log.usuario}</td>
                   <td className="py-4">
-                    <span className="px-3 py-1 rounded-full text-xs bg-[#111827] text-[#F3F4F6]">{log.acao}</span>
+                    <span className="px-3 py-1 rounded-full text-xs bg-[#0F172A] text-[#F8FAFC]">{log.acao}</span>
                   </td>
-                  <td className="py-4 text-sm text-[#9CA3AF]">{log.recurso}</td>
-                  <td className="py-4 text-sm text-[#9CA3AF] font-mono">{log.ip}</td>
+                  <td className="py-4 text-sm text-[#94A3B8]">{log.recurso}</td>
+                  <td className="py-4 text-sm text-[#94A3B8] font-mono">{log.ip}</td>
                   <td className={`py-4 text-sm font-medium ${getStatusColor(log.status)}`}>
                     {log.status === 'success' ? '✅ Success' : log.status === 'warning' ? '⚠️ Warning' : '❌ Failed'}
                   </td>
