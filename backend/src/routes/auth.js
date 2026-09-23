@@ -1,9 +1,9 @@
-import express from 'express';
-import bcrypt from 'bcryptjs';
-import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
-import { authMiddleware, generateToken, generateRefreshToken } from '../middleware/auth.js';
-import { validate } from '../middleware/validate.js';
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const { z } = require('zod');
+const { PrismaClient } = require('@prisma/client');
+const { authMiddleware, generateToken, generateRefreshToken } = require('../middleware/auth.js');
+const { validate } = require('../middleware/validate.js');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -201,4 +201,4 @@ router.get('/me', authMiddleware, async (req, res) => {
   });
 });
 
-export default router;
+module.exports = router;

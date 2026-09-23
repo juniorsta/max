@@ -1,6 +1,6 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-import { z } from 'zod';
+const { z } = require('zod');
 const { validate } = require('../middleware/validate.js');
 
 const router = express.Router();

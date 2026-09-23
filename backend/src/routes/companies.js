@@ -1,9 +1,8 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-import { z } from 'zod';
+const { z } = require('zod');
 
 const router = express.Router();
-const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const companySchema = z.object({
