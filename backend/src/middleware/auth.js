@@ -16,12 +16,17 @@ async function authMiddleware(req, res, next) {
       include: { empresa: true },
     });
 
-    if (!usuario || usuario.empresa.status !== 'active') {
+    if (!usuario) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+    
+    // Superadmin doesn't have empresa
+    if (usuario.role !== 'superadmin' && (!usuario.empresa || usuario.empresa.status !== 'active')) {
       return res.status(401).json({ error: 'Invalid token' });
     }
 
     req.user = usuario;
-    req.tenant = usuario.empresa;
+    req.tenant = usuario.empresa || null;
     next();
   } catch (e) {
     return res.status(401).json({ error: 'Invalid token' });

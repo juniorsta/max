@@ -24,7 +24,7 @@ model Empresa {
 
 model Usuario {
   id         String   @id @default(cuid())
-  empresaId  String
+  empresaId  String?
   nome       String
   email      String
   senhaHash  String
@@ -32,7 +32,7 @@ model Usuario {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  empresa Empresa @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  empresa Empresa? @relation(fields: [empresaId], references: [id], onDelete: Cascade)
 
   @@unique([empresaId, email])
   @@index([empresaId])

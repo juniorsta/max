@@ -29,7 +29,7 @@ const createUserSchema = z.object({
     nome: z.string().min(1),
     email: z.string().email(),
     senha: z.string().min(6),
-    role: z.enum(['admin', 'user']).optional(),
+    role: z.enum(['admin', 'user', 'superadmin']).optional(),
   }),
 });
 
@@ -46,7 +46,7 @@ router.post('/login', validate(loginSchema), async (req, res) => {
       return res.status(401).json({ error: 'Credenciais inválidas' });
     }
 
-    if (usuario.empresa.status !== 'active') {
+    if (usuario.empresa && usuario.empresa.status !== 'active') {
       return res.status(403).json({ error: 'Empresa inativa' });
     }
 
@@ -61,7 +61,7 @@ router.post('/login', validate(loginSchema), async (req, res) => {
         nome: usuario.nome,
         email: usuario.email,
         role: usuario.role,
-        empresa: { id: usuario.empresa.id, nome: usuario.empresa.nome },
+        empresa: usuario.empresa ? { id: usuario.empresa.id, nome: usuario.empresa.nome } : null,
       },
     });
   } catch (e) {
@@ -197,8 +197,28 @@ router.get('/me', authMiddleware, async (req, res) => {
     nome: req.user.nome,
     email: req.user.email,
     role: req.user.role,
-    empresa: { id: req.user.empresa.id, nome: req.user.empresa.nome },
+    empresa: req.user.empresa ? { id: req.user.empresa.id, nome: req.user.empresa.nome } : null,
   });
+});
+
+// Seed superadmin (admin only - remove after use)
+router.post('/seed-superadmin', validate({
+  body: z.object({
+    nome: z.string().min(1),
+    email: z.string().email(),
+    senha: z.string().min(6),
+  })
+}), async (req, res) => {
+  const { nome, email, senha } = req.body;
+  const existing = await prisma.usuario.findFirst({ where: { email } });
+  if (existing) return res.status(400).json({ error: 'Email já existe' });
+
+  const senhaHash = await bcrypt.hash(senha, 10);
+  const superadmin = await prisma.usuario.create({
+    data: { nome, email, senhaHash, role: 'superadmin' }
+  });
+
+  res.status(201).json({ id: superadmin.id, nome, email, role: 'superadmin' });
 });
 
 module.exports = router;
