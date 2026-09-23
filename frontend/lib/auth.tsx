@@ -13,7 +13,7 @@ interface User {
 interface AuthContextType {
   token: string | null;
   user: User | null;
-  login: (email: string, senha: string) => Promise<void>;
+  login: (email: string, senha: string) => Promise<User | null>;
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = async (email: string, senha: string) => {
+  const login = async (email: string, senha: string): Promise<User | null> => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
