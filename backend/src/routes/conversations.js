@@ -1,9 +1,10 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
 import { z } from 'zod';
-import { validate } from '../middleware/validate.js';
+const { validate } = require('../middleware/validate.js');
 
 const router = express.Router();
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const conversationQuerySchema = z.object({
@@ -63,4 +64,4 @@ router.post('/:leadId', async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

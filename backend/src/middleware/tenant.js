@@ -1,8 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+const { PrismaClient } = require('@prisma/client');
 
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-export async function resolveTenant(req, res, next) {
+async function resolveTenant(req, res, next) {
   const tenantId = req.headers['x-tenant-id'] || req.query.tenant_id;
   if (!tenantId) {
     return res.status(400).json({ error: 'Tenant ID required' });
@@ -20,9 +21,10 @@ export async function resolveTenant(req, res, next) {
   next();
 }
 
-export function requireTenant(req, res, next) {
+function requireTenant(req, res, next) {
   if (!req.tenant) {
     return res.status(403).json({ error: 'Tenant context required' });
   }
   next();
 }
+module.exports = { resolveTenant, requireTenant };

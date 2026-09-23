@@ -1,18 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import { sendTextMessage } from '../services/evolution.js';
-import { classifyLeadIntent, suggestNextStage } from '../services/freellm.js';
+const { PrismaClient } = require('@prisma/client');
+const { sendTextMessage } = require('./evolution.js');
+const { classifyLeadIntent, suggestNextStage, generateAutoResponse } = require('./freellm.js');
 
 const prisma = new PrismaClient();
 
-interface AppointmentData {
-  leadId: string;
-  empresaId: string;
-  data: Date;
-  status: string;
-  observacoes?: string;
-}
-
-export async function createAppointment(data: AppointmentData) {
+async function createAppointment(data) {
   const appointment = await prisma.agendamento.create({
     data: {
       leadId: data.leadId,
@@ -24,12 +16,11 @@ export async function createAppointment(data: AppointmentData) {
     include: { lead: true },
   });
 
-  // Send WhatsApp confirmation
   try {
     await sendTextMessage({
-      instance: `empresa_${data.empresaId}`,
+      instance: 'empresa_' + data.empresaId,
       number: appointment.lead.telefone,
-      text: `✅ Agendamento confirmado!\n📅 Data: ${appointment.data.toLocaleString('pt-BR')}\n📍 Local: Estética Automotiva Kera\n\nResponda CONFIRMAR para confirmar ou CANCELAR para cancelar.`,
+      text: '✅ Agendamento confirmado!\n📅 Data: ' + appointment.data.toLocaleString('pt-BR') + '\n📍 Local: Estética Automotiva Kera\n\nResponda CONFIRMAR para confirmar ou CANCELAR para cancelar.',
     });
   } catch (e) {
     console.error('Erro ao enviar WhatsApp de agendamento:', e);
@@ -38,8 +29,8 @@ export async function createAppointment(data: AppointmentData) {
   return appointment;
 }
 
-export async function getAppointments(empresaId: string, filters?: { status?: string; dataInicio?: Date; dataFim?: Date }) {
-  const where: any = { empresaId };
+async function getAppointments(empresaId, filters) {
+  const where = { empresaId };
   if (filters?.status) where.status = filters.status;
   if (filters?.dataInicio || filters?.dataFim) {
     where.data = {};
@@ -54,14 +45,14 @@ export async function getAppointments(empresaId: string, filters?: { status?: st
   });
 }
 
-export async function getAppointmentById(id: string) {
+async function getAppointmentById(id) {
   return prisma.agendamento.findUnique({
     where: { id },
     include: { lead: true, empresa: true },
   });
 }
 
-export async function updateAppointment(id: string, data: Partial<AppointmentData>) {
+async function updateAppointment(id, data) {
   const appointment = await prisma.agendamento.update({
     where: { id },
     data,
@@ -71,9 +62,9 @@ export async function updateAppointment(id: string, data: Partial<AppointmentDat
   if (data.status && data.status !== 'pendente') {
     try {
       await sendTextMessage({
-        instance: `empresa_${appointment.empresaId}`,
+        instance: 'empresa_' + appointment.empresaId,
         number: appointment.lead.telefone,
-        text: `📅 Seu agendamento foi ${data.status === 'confirmado' ? 'confirmado' : 'cancelado'}!\n📅 ${appointment.data.toLocaleString('pt-BR')}`,
+        text: '📅 Seu agendamento foi ' + (data.status === 'confirmado' ? 'confirmado' : 'cancelado') + '!\n📅 ' + appointment.data.toLocaleString('pt-BR'),
       });
     } catch (e) {
       console.error('Erro ao enviar WhatsApp de atualização:', e);
@@ -83,11 +74,11 @@ export async function updateAppointment(id: string, data: Partial<AppointmentDat
   return appointment;
 }
 
-export async function deleteAppointment(id: string) {
+async function deleteAppointment(id) {
   return prisma.agendamento.delete({ where: { id } });
 }
 
-export async function sendReminders() {
+async function sendReminders() {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   tomorrow.setHours(0, 0, 0, 0);
@@ -106,9 +97,9 @@ export async function sendReminders() {
   for (const apt of appointments) {
     try {
       await sendTextMessage({
-        instance: `empresa_${apt.empresaId}`,
+        instance: 'empresa_' + apt.empresaId,
         number: apt.lead.telefone,
-        text: `⏰ Lembrete: seu agendamento é amanhã às ${apt.data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}\n📍 Estética Automotiva Kera`,
+        text: '⏰ Lembrete: seu agendamento é amanhã às ' + apt.data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + '\n📍 Estética Automotiva Kera',
       });
     } catch (e) {
       console.error('Erro ao enviar lembrete:', e);
@@ -118,14 +109,12 @@ export async function sendReminders() {
   return appointments.length;
 }
 
-export async function processIncomingWhatsApp(empresaId: string, leadId: string, message: string) {
-  // Classify intent
+async function processIncomingWhatsApp(empresaId, leadId, message) {
   const classification = await classifyLeadIntent({
     message,
     leadData: { empresaId },
   });
 
-  // Suggest next stage
   const lead = await prisma.lead.findUnique({ where: { id: leadId } });
   if (lead) {
     const nextStage = await suggestNextStage(lead.etapa, message);
@@ -137,8 +126,17 @@ export async function processIncomingWhatsApp(empresaId: string, leadId: string,
     }
   }
 
-  // Generate auto response
-  const response = await generateAutoResponse(message, `Lead: ${lead?.nome || 'Não informado'}, Etapa: ${lead?.etapa || 'novo'}`);
+  const response = await generateAutoResponse(message, 'Lead: ' + (lead?.nome || 'Não informado') + ', Etapa: ' + (lead?.etapa || 'novo'));
 
   return { classification, response, nextStage: lead?.etapa };
 }
+
+module.exports = {
+  createAppointment,
+  getAppointments,
+  getAppointmentById,
+  updateAppointment,
+  deleteAppointment,
+  sendReminders,
+  processIncomingWhatsApp,
+};

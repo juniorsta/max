@@ -1,8 +1,9 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
 import { z } from 'zod';
 
 const router = express.Router();
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const companySchema = z.object({
@@ -41,4 +42,4 @@ router.delete('/:id', async (req, res) => {
   res.status(204).send();
 });
 
-export default router;
+module.exports = router;

@@ -1,23 +1,24 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import helmet from 'helmet';
-import { PrismaClient } from '@prisma/client';
-import { resolveTenant, requireTenant } from './middleware/tenant.js';
-import { authMiddleware } from './middleware/auth.js';
-import { validateWebhookSecret } from './middleware/webhook.js';
-import companiesRouter from './routes/companies.js';
-import leadsRouter from './routes/leads.js';
-import conversationsRouter from './routes/conversations.js';
-import webhookRouter from './routes/webhook.js';
-import dashboardRouter from './routes/dashboard.js';
-import authRouter from './routes/auth.js';
-import appointmentsRouter from './routes/appointments.js';
-import iaRouter from './routes/ia.js';
+const express = require('express');
+require('dotenv').config();
+const cors = require('cors');
+const helmet = require('helmet');
+const { PrismaClient } = require('@prisma/client');
+const { resolveTenant, requireTenant } = require('./middleware/tenant.js');
+const { authMiddleware } = require('./middleware/auth.js');
+const { validateWebhookSecret } = require('./middleware/webhook.js');
+const companiesRouter = require('./routes/companies.js');
+const leadsRouter = require('./routes/leads.js');
+const conversationsRouter = require('./routes/conversations.js');
+const webhookRouter = require('./routes/webhook.js');
+const dashboardRouter = require('./routes/dashboard.js');
+const authRouter = require('./routes/auth.js');
+const appointmentsRouter = require('./routes/appointments.js');
+const iaRouter = require('./routes/ia.js');
 
-dotenv.config();
+
 
 const app = express();
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 app.use(helmet());
@@ -41,4 +42,4 @@ app.use('/api/v1/ia', authMiddleware, requireTenant, iaRouter);
 app.use('/api/v1/webhooks', validateWebhookSecret, webhookRouter);
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`Backend running on ${PORT}`));
+app.listen(PORT, () => console.log('Backend running on ' + PORT));

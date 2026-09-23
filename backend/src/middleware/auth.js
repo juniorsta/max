@@ -1,9 +1,10 @@
-import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
+const jwt = require('jsonwebtoken');
+const { PrismaClient } = require('@prisma/client');
 
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-export async function authMiddleware(req, res, next) {
+async function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Token required' });
@@ -29,7 +30,7 @@ export async function authMiddleware(req, res, next) {
   }
 }
 
-export function generateToken(user) {
+function generateToken(user) {
   return jwt.sign(
     { userId: user.id, empresaId: user.empresaId, role: user.role },
     process.env.JWT_SECRET,
@@ -37,10 +38,11 @@ export function generateToken(user) {
   );
 }
 
-export function generateRefreshToken(user) {
+function generateRefreshToken(user) {
   return jwt.sign(
     { userId: user.id, type: 'refresh' },
     process.env.JWT_SECRET,
     { expiresIn: '7d' }
   );
 }
+module.exports = { authMiddleware, generateToken, generateRefreshToken };

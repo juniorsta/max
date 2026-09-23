@@ -1,6 +1,6 @@
 import { ZodError } from 'zod';
 
-export function validate(schema) {
+function validate(schema) {
   return (req, res, next) => {
     try {
       schema.parse({
@@ -23,3 +23,4 @@ export function validate(schema) {
     }
   };
 }
+module.exports = { validate };

@@ -1,9 +1,9 @@
-import express from 'express';
-import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
-import { authMiddleware } from '../middleware/auth.js';
-import { requireTenant } from '../middleware/tenant.js';
-import { validate } from '../middleware/validate.js';
+const express = require('express');
+const { z } = require('zod');
+const { PrismaClient } = require('@prisma/client');
+const { authMiddleware } = require('../middleware/auth.js');
+const { requireTenant } = require('../middleware/tenant.js');
+const { validate } = require('../middleware/validate.js');
 import {
   createAppointment,
   getAppointments,
@@ -14,6 +14,7 @@ import {
 } from '../services/appointments.js';
 
 const router = express.Router();
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const createAppointmentSchema = z.object({
@@ -123,4 +124,4 @@ router.post('/send-reminders', authMiddleware, requireTenant, async (req, res) =
   }
 });
 
-export default router;
+module.exports = router;

@@ -1,10 +1,12 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
-import { validateWebhookSecret } from '../middleware/webhook.js';
-import { processIncomingWhatsApp } from '../services/appointments.js';
-import { sendTextMessage } from '../services/evolution.js';
 
+const { PrismaClient } = require('@prisma/client');
+const { validateWebhookSecret } = require('../middleware/webhook.js');
+const { processIncomingWhatsApp } = require('../services/appointments.js');
+const { sendTextMessage } = require('../services/evolution.js');
+
+const express = require('express');
 const router = express.Router();
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 // Webhook WhatsApp (Evolution API)
@@ -77,4 +79,4 @@ router.post('/whatsapp', validateWebhookSecret, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

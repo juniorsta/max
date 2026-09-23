@@ -1,9 +1,10 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
-import { z } from 'zod';
-import { validate } from '../middleware/validate.js';
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+const { z } = require('zod');
+const { validate } = require('../middleware/validate.js');
 
 const router = express.Router();
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const leadCreateSchema = z.object({
@@ -146,4 +147,4 @@ router.get('/kanban/stats', async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

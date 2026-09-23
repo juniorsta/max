@@ -1,7 +1,8 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
 
 const router = express.Router();
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 // Dashboard metrics
@@ -67,4 +68,4 @@ router.get('/activity', async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
