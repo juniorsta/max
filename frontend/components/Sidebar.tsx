@@ -24,9 +24,9 @@ export function Sidebar() {
   const { user, logout } = useAuth();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[240px] bg-[#111827] border-r border-[#1E293B] flex flex-col">
-      <div className="h-16 flex items-center px-6 border-b border-[#1E293B]">
-        <span className="text-xl font-bold">K<span className="text-[#8B5CF6]">ERA</span></span>
+    <aside className="fixed left-0 top-0 h-screen w-[240px] bg-[#1E293B] border-r border-[#334155] flex flex-col">
+      <div className="h-16 flex items-center px-6 border-b border-[#334155]">
+        <span className="text-xl font-bold text-[#F8FAFC]">K<span className="text-[#6366F1]">ERA</span></span>
       </div>
       
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -34,10 +34,10 @@ export function Sidebar() {
           <Link
             key={item.name}
             href={item.href}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
               pathname === item.href
-                ? 'bg-[#8B5CF6]/10 text-[#8B5CF6] border border-[#8B5CF6]/20'
-                : 'text-[#9CA3AF] hover:bg-[#1E293B] hover:text-[#F3F4F6]'
+                ? 'bg-[#6366F1]/15 text-[#818CF8] border border-[#6366F1]/30 shadow-sm shadow-[#6366F1]/10'
+                : 'text-[#94A3B8] hover:bg-[#334155]/60 hover:text-[#F8FAFC]'
             }`}
           >
             <span className="text-base">{item.icon}</span>
@@ -46,19 +46,19 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="p-4 border-t border-[#1E293B]">
+      <div className="p-4 border-t border-[#334155]">
         <div className="flex items-center gap-3 px-3 py-2">
-          <div className="w-8 h-8 rounded-full bg-[#8B5CF6] flex items-center justify-center text-white text-sm font-medium">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#6366F1] to-[#8B5CF6] flex items-center justify-center text-white text-sm font-medium">
             {user?.nome?.[0]?.toUpperCase() || 'S'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-[#F3F4F6] truncate">{user?.nome}</p>
-            <p className="text-xs text-[#9CA3AF] truncate">{user?.email}</p>
+            <p className="text-sm font-medium text-[#F8FAFC] truncate">{user?.nome}</p>
+            <p className="text-xs text-[#94A3B8] truncate">{user?.email}</p>
           </div>
         </div>
         <button
           onClick={logout}
-          className="mt-3 w-full flex items-center justify-center gap-2 px-3 py-2 text-sm text-[#9CA3AF] hover:text-[#F3F4F6] hover:bg-[#1E293B] rounded-lg transition-colors"
+          className="mt-3 w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#334155]/60 rounded-lg transition-colors"
         >
           <span>⏻</span> Sair
         </button>

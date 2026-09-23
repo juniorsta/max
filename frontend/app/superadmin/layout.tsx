@@ -19,14 +19,14 @@ export default function SuperadminLayout({ children }: { children: React.ReactNo
 
   if (!user || user.role !== 'superadmin') {
     return (
-      <div className="min-h-screen bg-[#111827] flex items-center justify-center">
-        <div className="text-[#F3F4F6]">Carregando...</div>
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
+        <div className="text-[#F8FAFC]">Carregando...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#111827] text-[#F3F4F6]">
+    <div className="min-h-screen bg-[#0F172A] text-[#F8FAFC]">
       <Sidebar />
       <div className="ml-[240px]">
         <Topbar />
