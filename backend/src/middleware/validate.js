@@ -1,4 +1,4 @@
-import { ZodError } from 'zod';
+const { ZodError } = require('zod');
 
 function validate(schema) {
   return (req, res, next) => {
