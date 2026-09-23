@@ -12,6 +12,8 @@ import conversationsRouter from './routes/conversations.js';
 import webhookRouter from './routes/webhook.js';
 import dashboardRouter from './routes/dashboard.js';
 import authRouter from './routes/auth.js';
+import appointmentsRouter from './routes/appointments.js';
+import iaRouter from './routes/ia.js';
 
 dotenv.config();
 
@@ -32,6 +34,8 @@ app.use('/api/v1/companies', authMiddleware, requireTenant, companiesRouter);
 app.use('/api/v1/leads', authMiddleware, requireTenant, leadsRouter);
 app.use('/api/v1/conversations', authMiddleware, requireTenant, conversationsRouter);
 app.use('/api/v1/dashboard', authMiddleware, requireTenant, dashboardRouter);
+app.use('/api/v1/appointments', authMiddleware, requireTenant, appointmentsRouter);
+app.use('/api/v1/ia', authMiddleware, requireTenant, iaRouter);
 
 // Webhook - no auth, only secret
 app.use('/api/v1/webhooks', validateWebhookSecret, webhookRouter);
