@@ -182,7 +182,7 @@ export default function AgendamentosPage() {
                     <td className="py-2">
                       <div className="flex gap-1">
                         <Button variant="ghost" size="sm" onClick={() => openEdit(apt)}>✏️</Button>
-                        <Button variant="ghost" size="sm" variant="danger" onClick={() => handleDelete(apt.id)}>🗑️</Button>
+                        <Button variant="danger" size="sm" onClick={() => handleDelete(apt.id)}>🗑️</Button>
                       </div>
                     </td>
                   </tr>
