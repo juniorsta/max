@@ -30,8 +30,6 @@ export default function RegisterPage() {
     setError('');
     setLoading(true);
     try {
-      await login(form.email, form.senha); // login will fail, but we need register
-      // Actually we need to call register endpoint directly
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -42,7 +40,10 @@ export default function RegisterPage() {
           senha: form.senha,
         }),
       });
-      if (!res.ok) throw new Error('Erro ao registrar');
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Erro ao registrar');
+      }
       const data = await res.json();
       localStorage.setItem('token', data.token);
       router.push('/dashboard');
