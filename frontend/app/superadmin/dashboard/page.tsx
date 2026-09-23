@@ -4,9 +4,39 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth';
 import { Card } from '@/components/Card';
 
+interface KPIs {
+  empresasAtivas: number;
+  empresasBloqueadas: number;
+  empresasTeste: number;
+  empresasCanceladas: number;
+  usuariosTotais: number;
+  leadsHoje: number;
+  conversasHoje: number;
+  mensagensEnviadas: number;
+  mensagensRecebidas: number;
+  agendamentosHoje: number;
+  totalLeads: number;
+  totalConversas: number;
+  totalMensagensEnviadas: number;
+  totalMensagensRecebidas: number;
+  totalAgendamentos: number;
+  receitaMensal: number;
+  churn: number;
+  usoIA: number;
+  custosIA: number;
+}
+
+interface Graficos {
+  conversasPorDia: { date: string; count: number }[];
+  crescimentoClientes: { month: string; count: number }[];
+  novosLeadsPorDia: { date: string; count: number }[];
+  agendamentosPorSemana: { week: string; count: number }[];
+  errosSistema: number;
+}
+
 export default function SuperadminDashboard() {
   const { user, token } = useAuth();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<{kpis: KPIs, graficos: Graficos} | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
