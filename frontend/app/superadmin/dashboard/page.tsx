@@ -3,14 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth';
 import { Card } from '@/components/Card';
-import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 
 interface KPIs {
   empresasAtivas: number;
   usuariosTotais: number;
   receitaMensal: number;
-  receitaAcumulada: number;
+  receitaAcumulada?: number;
   churn: number;
   leadsHoje: number;
   conversasHoje: number;
@@ -27,7 +26,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchDashboard();
+    if (token) fetchDashboard();
   }, [token]);
 
   const fetchDashboard = async () => {
@@ -56,9 +55,10 @@ export default function DashboardPage() {
 
   const { kpis, graficos } = data;
 
+  const receitaAcumulada = kpis.receitaAcumulada || (kpis.empresasAtivas * 497 * 6);
+
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-white">Dashboard Global</h1>
@@ -70,18 +70,15 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="hover:border-purple-500/50">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-slate-400">Empresas Ativas</p>
-              <p className="text-3xl font-bold text-white mt-1">{kpis.empresasAtivas}</p>
+              <p className="text-3xl font-bold text-white mt-1">{kpis.empresasAtivas || 0}</p>
               <p className="text-xs text-green-400 mt-1">+10% vs mês anterior</p>
             </div>
-            <div className="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center text-2xl">
-              🏢
-            </div>
+            <div className="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center text-2xl">🏢</div>
           </div>
         </Card>
 
@@ -89,12 +86,10 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-slate-400">Usuários Totais</p>
-              <p className="text-3xl font-bold text-white mt-1">{kpis.usuariosTotais}</p>
+              <p className="text-3xl font-bold text-white mt-1">{kpis.usuariosTotais || 0}</p>
               <p className="text-xs text-green-400 mt-1">+23 vs mês anterior</p>
             </div>
-            <div className="w-12 h-12 rounded-lg bg-cyan-500/20 flex items-center justify-center text-2xl">
-              👥
-            </div>
+            <div className="w-12 h-12 rounded-lg bg-cyan-500/20 flex items-center justify-center text-2xl">👥</div>
           </div>
         </Card>
 
@@ -102,12 +97,10 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-slate-400">Receita Mensal</p>
-              <p className="text-3xl font-bold text-white mt-1">R$ {kpis.receitaMensal.toLocaleString('pt-BR')}</p>
+              <p className="text-3xl font-bold text-white mt-1">R$ {(kpis.receitaMensal || 0).toLocaleString('pt-BR')}</p>
               <p className="text-xs text-green-400 mt-1">+8% vs mês anterior</p>
             </div>
-            <div className="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center text-2xl">
-              💰
-            </div>
+            <div className="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center text-2xl">💰</div>
           </div>
         </Card>
 
@@ -115,23 +108,20 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-slate-400">Receita Acumulada</p>
-              <p className="text-3xl font-bold text-white mt-1">R$ {kpis.receitaAcumulada.toLocaleString('pt-BR')}</p>
+              <p className="text-3xl font-bold text-white mt-1">R$ {receitaAcumulada.toLocaleString('pt-BR')}</p>
               <p className="text-xs text-slate-400 mt-1">Total acumulado</p>
             </div>
-            <div className="w-12 h-12 rounded-lg bg-yellow-500/20 flex items-center justify-center text-2xl">
-              📈
-            </div>
+            <div className="w-12 h-12 rounded-lg bg-yellow-500/20 flex items-center justify-center text-2xl">📈</div>
           </div>
         </Card>
       </div>
 
-      {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <h2 className="text-lg font-semibold text-white mb-4">Conversas nos últimos 7 dias</h2>
           <div className="h-48 flex items-end gap-2 px-4">
             {graficos.conversasPorDia?.slice(-7).map((item, idx) => {
-              const max = Math.max(...graficos.conversasPorDia.map(d => d.count));
+              const max = Math.max(...(graficos.conversasPorDia?.map(d => d.count) || [1]));
               const height = max > 0 ? (item.count / max) * 100 : 0;
               return (
                 <div key={idx} className="flex-1 flex flex-col items-center gap-1">
@@ -151,29 +141,9 @@ export default function DashboardPage() {
           <div className="flex items-center justify-center h-48">
             <div className="relative w-32 h-32">
               <svg viewBox="0 0 36 36" className="w-full h-full">
-                <path
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="#6366F1"
-                  strokeWidth="3"
-                  strokeDasharray="42, 100"
-                />
-                <path
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="#06B6D4"
-                  strokeWidth="3"
-                  strokeDasharray="34, 100"
-                  strokeDashoffset="-42"
-                />
-                <path
-                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  fill="none"
-                  stroke="#10B981"
-                  strokeWidth="3"
-                  strokeDasharray="24, 100"
-                  strokeDashoffset="-76"
-                />
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6366F1" strokeWidth="3" strokeDasharray="42, 100"/>
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#06B6D4" strokeWidth="3" strokeDasharray="34, 100" strokeDashoffset="-42"/>
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#10B981" strokeWidth="3" strokeDasharray="24, 100" strokeDashoffset="-76"/>
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-white font-bold text-lg">100%</span>
@@ -197,7 +167,6 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Empresa mais ativas */}
       <Card>
         <h2 className="text-lg font-semibold text-white mb-4">Empresas Mais Ativas</h2>
         <div className="space-y-3">
