@@ -13,6 +13,9 @@ const navigation = [
 
 const superadminNavigation = [
   { name: 'Empresas', href: '/superadmin/empresas', icon: '🏢' },
+  { name: 'Usuários', href: '/superadmin/usuarios', icon: '👥' },
+  { name: 'Relatórios', href: '/superadmin/relatorios', icon: '📊' },
+  { name: 'Configurações', href: '/superadmin/configuracoes', icon: '⚙️' },
 ];
 
 export function AppLayout({ children }: { children: ReactNode }) {
