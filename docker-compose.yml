@@ -105,7 +105,7 @@ services:
       environment:
         NODE_ENV: production
         PORT: 4000
-        DATABASE_URL: postgresql://kera_admin:***@kera_postgres:5432/kera_db
+        DATABASE_URL: postgresql://kera_admin:3900Mcf!32510@kera_postgres:5432/kera_db
         REDIS_URL: redis://:3900Mcf!32510@kera_redis:6379
         JWT_SECRET: ${JWT_SECRET}
         WEBHOOK_SECRET: ${WEBHOOK_SECRET}
