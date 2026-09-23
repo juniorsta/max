@@ -11,6 +11,10 @@ const navigation = [
   { name: 'Agendamentos', href: '/agendamentos', icon: '📅' },
 ];
 
+const superadminNavigation = [
+  { name: 'Empresas', href: '/superadmin/empresas', icon: '🏢' },
+];
+
 export function AppLayout({ children }: { children: ReactNode }) {
   const { token, user, logout } = useAuth();
   const router = useRouter();
@@ -22,6 +26,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
   }, [token, router]);
 
   if (!token) return null;
+
+  const isSuperadmin = user?.role === 'superadmin';
+  const nav = isSuperadmin ? superadminNavigation : navigation;
 
   return (
     <div className="min-h-screen bg-gray-950">
@@ -41,7 +48,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           </button>
         </div>
         <nav className="p-4 space-y-1">
-          {navigation.map((item) => (
+          {nav.map((item) => (
             <Link
               key={item.name}
               href={item.href}
