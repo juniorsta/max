@@ -8,7 +8,6 @@ const { classifyLeadIntent, generateAutoResponse, suggestNextStage } = require('
 const { sendTextMessage } = require('../services/evolution.js');
 
 const router = express.Router();
-const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const testAIResponseSchema = z.object({

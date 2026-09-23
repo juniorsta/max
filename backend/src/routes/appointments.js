@@ -15,7 +15,6 @@ const {
 } from '../services/appointments.js';
 
 const router = express.Router();
-const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const createAppointmentSchema = z.object({

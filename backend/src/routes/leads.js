@@ -4,7 +4,6 @@ const { z } = require('zod');
 const { validate } = require('../middleware/validate.js');
 
 const router = express.Router();
-const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const leadCreateSchema = z.object({
