@@ -1,77 +1,29 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/lib/auth';
+import { useState } from 'react';
 import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 
 export default function ConfiguracoesPage() {
-  const { token } = useAuth();
-  const [settings, setSettings] = useState<any>({});
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState('geral');
-
-  useEffect(() => {
-    fetchSettings();
-  }, [token]);
-
-  const fetchSettings = async () => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/settings`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
-      setSettings(data);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/superadmin/settings`, {
-        method: 'PATCH',
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(settings)
-      });
-      alert('Configurações salvas!');
-    } catch (e) {
-      console.error(e);
-      alert('Erro ao salvar configurações');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  if (loading) {
-    return <div className="flex items-center justify-center h-64"><div className="text-purple-400">Carregando...</div></div>;
-  }
 
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold text-white">Configurações Globais</h1>
-        <p className="text-slate-400 mt-1">Gerencie as configurações da plataforma KERA</p>
+        <h1 className="text-[32px] font-bold text-[#F3F4F6]">Configurações Globais</h1>
+        <p className="text-[#9CA3AF] mt-1">Gerencie as configurações da plataforma KERA</p>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 border-b border-[#334155]">
+      <div className="flex gap-2 border-b border-[#1E293B]">
         {['geral', 'segurança', 'notificações', 'integrações', 'sistema'].map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+            className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
               tab === t 
-                ? 'bg-[#1E293B] text-purple-400 border-b-2 border-purple-500' 
-                : 'text-slate-400 hover:text-white'
+                ? 'border-[#8B5CF6] text-[#8B5CF6]' 
+                : 'border-transparent text-[#9CA3AF] hover:text-[#F3F4F6]'
             }`}
           >
             {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -80,42 +32,51 @@ export default function ConfiguracoesPage() {
       </div>
 
       {tab === 'geral' && (
-        <Card>
-          <h2 className="text-lg font-semibold text-white mb-4">Configurações da Plataforma</h2>
+        <Card className="p-8 bg-[#1E293B] border-[#1E293B] rounded-xl">
+          <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-6">Configurações da Plataforma</h2>
           <div className="space-y-4">
-            <Input 
-              label="Nome da Plataforma"
-              value={settings.nome_plataforma || 'KERA'}
-              onChange={e => setSettings({ ...settings, nome_plataforma: e.target.value })}
-            />
-            <Input 
-              label="URL base"
-              value={settings.url_base || 'https://kera.stazak.com.br'}
-              onChange={e => setSettings({ ...settings, url_base: e.target.value })}
-            />
-            <select 
-              className="w-full bg-[#0F172A] border border-[#334155] rounded-lg px-4 py-2 text-white"
-              value={settings.fuso_horario || 'America/Sao_Paulo'}
-              onChange={e => setSettings({ ...settings, fuso_horario: e.target.value })}
-            >
-              <option value="America/Sao_Paulo">America/Sao_Paulo</option>
-              <option value="UTC">UTC</option>
-            </select>
-            <select 
-              className="w-full bg-[#0F172A] border border-[#334155] rounded-lg px-4 py-2 text-white"
-              value={settings.idioma || 'pt-BR'}
-              onChange={e => setSettings({ ...settings, idioma: e.target.value })}
-            >
-              <option value="pt-BR">Português (BR)</option>
-              <option value="en">English</option>
-            </select>
-            <div className="flex items-center justify-between p-4 bg-[#0F172A] rounded-lg">
+            <Input label="Nome da Plataforma" value="KERA" />
+            <Input label="URL base" value="https://kera.stazak.com.br" />
+            <div>
+              <label className="block text-sm font-medium text-[#9CA3AF] mb-2">Fuso horário</label>
+              <select className="w-full px-4 py-2.5 bg-[#111827] border border-[#1E293B] rounded-lg text-[#F3F4F6] focus:outline-none focus:border-[#8B5CF6]">
+                <option>America/Sao_Paulo</option>
+                <option>UTC</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#9CA3AF] mb-2">Idioma</label>
+              <select className="w-full px-4 py-2.5 bg-[#111827] border border-[#1E293B] rounded-lg text-[#F3F4F6] focus:outline-none focus:border-[#8B5CF6]">
+                <option>Português (BR)</option>
+                <option>English</option>
+              </select>
+            </div>
+            <div className="flex items-center justify-between p-4 bg-[#111827] rounded-lg">
               <div>
-                <p className="text-white font-medium">Modo Manutenção</p>
-                <p className="text-sm text-slate-400">Desativa o acesso para todos exceto superadmins</p>
+                <p className="text-[#F3F4F6] font-medium">Modo Manutenção</p>
+                <p className="text-sm text-[#9CA3AF] mt-1">Desativa o acesso para todos exceto superadmins</p>
               </div>
-              <button className="w-12 h-6 bg-[#334155] rounded-full relative transition-colors">
-                <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full" />
+              <button className="w-12 h-6 bg-[#1E293B] rounded-full relative transition-colors hover:bg-[#111827]">
+                <div className="absolute left-1 top-1 w-4 h-4 bg-[#9CA3AF] rounded-full transition-all" />
+              </button>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {tab === 'segurança' && (
+        <Card className="p-8 bg-[#1E293B] border-[#1E293B] rounded-xl">
+          <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-6">Segurança</h2>
+          <div className="space-y-4">
+            <Input label="Tempo de sessão (minutos)" type="number" value="60" />
+            <Input label="Tentativas de login antes de bloquear" type="number" value="5" />
+            <div className="flex items-center justify-between p-4 bg-[#111827] rounded-lg">
+              <div>
+                <p className="text-[#F3F4F6] font-medium">Autenticação 2FA</p>
+                <p className="text-sm text-[#9CA3AF] mt-1">Obrigar autenticação em dois fatores</p>
+              </div>
+              <button className="w-12 h-6 bg-[#8B5CF6] rounded-full relative">
+                <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full" />
               </button>
             </div>
           </div>
@@ -123,9 +84,7 @@ export default function ConfiguracoesPage() {
       )}
 
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? 'Salvando...' : 'Salvar Configurações'}
-        </Button>
+        <Button className="bg-[#8B5CF6] hover:bg-[#7C3AED]">Salvar Configurações</Button>
       </div>
     </div>
   );

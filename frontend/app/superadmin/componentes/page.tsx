@@ -8,12 +8,12 @@ export default function ComponentesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Componentes</h1>
-        <p className="text-slate-400 mt-1">Biblioteca de componentes da UI</p>
+        <h1 className="text-[32px] font-bold text-[#F3F4F6]">Biblioteca de Componentes</h1>
+        <p className="text-[#9CA3AF] mt-1">Design system da plataforma KERA</p>
       </div>
 
-      <Card>
-        <h2 className="text-lg font-semibold text-white mb-4">Botões</h2>
+      <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
+        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Botões</h2>
         <div className="flex flex-wrap gap-3">
           <Button>Primário</Button>
           <Button variant="secondary">Secundário</Button>
@@ -26,40 +26,71 @@ export default function ComponentesPage() {
         </div>
       </Card>
 
-      <Card>
-        <h2 className="text-lg font-semibold text-white mb-4">Inputs</h2>
+      <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
+        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Inputs</h2>
         <div className="max-w-md space-y-4">
           <Input label="Email" placeholder="seu@email.com" />
           <Input label="Senha" type="password" placeholder="Digite sua senha" error="Senha incorreta" />
         </div>
       </Card>
 
-      <Card>
-        <h2 className="text-lg font-semibold text-white mb-4">Cards</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <p className="text-white font-medium">Card Padrão</p>
-            <p className="text-sm text-slate-400 mt-1">Conteúdo do card</p>
-          </Card>
-          <Card className="border-purple-500/50">
-            <p className="text-white font-medium">Card Destaque</p>
-            <p className="text-sm text-slate-400 mt-1">Com borda colorida</p>
-          </Card>
-          <Card>
-            <p className="text-white font-medium">Card Glass</p>
-            <p className="text-sm text-slate-400 mt-1">Efeito glassmorphism</p>
-          </Card>
+      <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
+        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Badges</h2>
+        <div className="flex flex-wrap gap-2">
+          {['Ativo', 'Pendente', 'Bloqueado', 'Info', 'Premium'].map((badge, idx) => {
+            const colors = ['bg-[#10B981]/20 text-[#10B981]', 'bg-[#F59E0B]/20 text-[#F59E0B]', 'bg-[#EF4444]/20 text-[#EF4444]', 'bg-[#2563EB]/20 text-[#2563EB]', 'bg-[#8B5CF6]/20 text-[#8B5CF6]'];
+            return (
+              <span key={idx} className={`px-3 py-1 rounded-full text-xs ${colors[idx]}`}>{badge}</span>
+            );
+          })}
         </div>
       </Card>
 
-      <Card>
-        <h2 className="text-lg font-semibold text-white mb-4">Badges</h2>
-        <div className="flex flex-wrap gap-2">
-          <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm">🟢 Ativo</span>
-          <span className="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400 text-sm">🟡 Pendente</span>
-          <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-sm">🔴 Bloqueado</span>
-          <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-sm">🔵 Info</span>
-          <span className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm">🟣 Premium</span>
+      <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
+        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Paleta de Cores</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { nome: 'Primária', hex: '#8B5CF6' },
+            { nome: 'Secundária', hex: '#2563EB' },
+            { nome: 'Sucesso', hex: '#10B981' },
+            { nome: 'Aviso', hex: '#F59E0B' },
+            { nome: 'Erro', hex: '#EF4444' },
+            { nome: 'Fundo escuro', hex: '#111827' },
+            { nome: 'Fundo claro', hex: '#1E293B' },
+            { nome: 'Texto', hex: '#F3F4F6' },
+          ].map((color, idx) => (
+            <div key={idx} className="text-center">
+              <div className="w-full aspect-square rounded-lg mb-2" style={{ backgroundColor: color.hex }} />
+              <p className="text-sm font-medium text-[#F3F4F6]">{color.nome}</p>
+              <p className="text-xs text-[#9CA3AF] font-mono">{color.hex}</p>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      <Card className="p-6 bg-[#1E293B] border-[#1E293B] rounded-xl">
+        <h2 className="text-[20px] font-semibold text-[#F3F4F6] mb-4">Tipografia</h2>
+        <div className="space-y-3">
+          <div className="flex items-baseline gap-4">
+            <span className="text-[32px] font-bold text-[#F3F4F6]">H1 - 32px</span>
+            <span className="text-[#9CA3AF]">Bold</span>
+          </div>
+          <div className="flex items-baseline gap-4">
+            <span className="text-[24px] font-semibold text-[#F3F4F6]">H2 - 24px</span>
+            <span className="text-[#9CA3AF]">Semibold</span>
+          </div>
+          <div className="flex items-baseline gap-4">
+            <span className="text-[20px] font-medium text-[#F3F4F6]">H3 - 20px</span>
+            <span className="text-[#9CA3AF]">Medium</span>
+          </div>
+          <div className="flex items-baseline gap-4">
+            <span className="text-[14px] text-[#F3F4F6]">Body - 14px</span>
+            <span className="text-[#9CA3AF]">Regular</span>
+          </div>
+          <div className="flex items-baseline gap-4">
+            <span className="text-[12px] text-[#9CA3AF]">Caption - 12px</span>
+            <span className="text-[#9CA3AF]">Regular</span>
+          </div>
         </div>
       </Card>
     </div>
