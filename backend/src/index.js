@@ -24,11 +24,15 @@ app.use(express.json());
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
-// Public auth routes
+// Public auth routes (no tenant resolution needed - JWT has empresaId)
 app.use('/api/v1/auth', authRouter);
 
-// Tenant resolution for all API routes
-app.use('/api/v1', resolveTenant);
+// Tenant resolution for protected API routes
+app.use('/api/v1', (req, res, next) => {
+  // Skip tenant resolution for auth routes
+  if (req.path.startsWith('/auth/')) return next();
+  resolveTenant(req, res, next);
+});
 app.use('/api/v1', requireTenant);
 
 // Protected routes
