@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth';
 import { Card } from '@/components/Card';
+import { Button } from '@/components/Button';
 
 interface Log {
   id: string;
@@ -36,40 +37,54 @@ export default function LogsPage() {
     }
   };
 
-  if (loading) return <div className="p-6 text-white">Carregando...</div>;
+  if (loading) {
+    return <div className="flex items-center justify-center h-64"><div className="text-purple-400">Carregando...</div></div>;
+  }
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">Logs de Auditoria</h1>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Logs e Auditoria</h1>
+          <p className="text-slate-400 mt-1">Histórico completo de ações na plataforma</p>
+        </div>
+        <Button variant="outline" onClick={fetchLogs}>Atualizar</Button>
+      </div>
 
       <Card>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-gray-400 border-b border-gray-800">
+              <tr className="text-left text-slate-400 border-b border-[#334155]">
+                <th className="pb-3 pr-4">Data/Hora</th>
                 <th className="pb-3 pr-4">Usuário</th>
                 <th className="pb-3 pr-4">Ação</th>
                 <th className="pb-3 pr-4">IP</th>
-                <th className="pb-3">Data/Hora</th>
+                <th className="pb-3">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800">
+            <tbody className="divide-y divide-[#334155]">
               {logs.map(log => (
-                <tr key={log.id} className="hover:bg-gray-800/50">
-                  <td className="py-3 pr-4">
-                    <div className="font-medium text-white">{log.usuario?.nome}</div>
-                    <div className="text-xs text-gray-500">{log.usuario?.email}</div>
+                <tr key={log.id} className="hover:bg-[#0F172A]/50">
+                  <td className="py-3 pr-4 text-slate-400 whitespace-nowrap">
+                    {new Date(log.timestamp).toLocaleString('pt-BR')}
                   </td>
                   <td className="py-3 pr-4">
-                    <span className="px-2 py-1 rounded bg-gray-700 text-xs">{log.acao}</span>
+                    <div>
+                      <p className="font-medium text-white">{log.usuario?.nome}</p>
+                      <p className="text-xs text-slate-500">{log.usuario?.email}</p>
+                    </div>
                   </td>
-                  <td className="py-3 pr-4 text-gray-400 font-mono text-xs">{log.ip}</td>
-                  <td className="py-3 text-gray-400">{new Date(log.timestamp).toLocaleString('pt-BR')}</td>
+                  <td className="py-3 pr-4">
+                    <span className="px-2 py-1 rounded bg-[#334155] text-xs text-white">{log.acao}</span>
+                  </td>
+                  <td className="py-3 pr-4 text-slate-400 font-mono text-xs">{log.ip}</td>
+                  <td className="py-3 text-green-400">✅ Success</td>
                 </tr>
               ))}
               {logs.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-8 text-center text-gray-500">Nenhum log encontrado</td>
+                  <td colSpan={5} className="py-8 text-center text-slate-500">Nenhum log encontrado</td>
                 </tr>
               )}
             </tbody>

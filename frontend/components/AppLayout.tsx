@@ -15,9 +15,14 @@ const superadminNavigation = [
   { name: 'Dashboard', href: '/superadmin/dashboard', icon: '📊' },
   { name: 'Empresas', href: '/superadmin/empresas', icon: '🏢' },
   { name: 'Usuários', href: '/superadmin/usuarios', icon: '👥' },
+  { name: 'Evolution API', href: '/superadmin/evolution', icon: '📱' },
+  { name: 'CRM', href: '/superadmin/crm', icon: '🎯' },
+  { name: 'Financeiro', href: '/superadmin/financeiro', icon: '💰' },
+  { name: 'IA & Modelos', href: '/superadmin/ai', icon: '🤖' },
   { name: 'Monitoramento', href: '/superadmin/monitoramento', icon: '📈' },
   { name: 'Logs', href: '/superadmin/logs', icon: '📝' },
-  { name: 'Relatórios', href: '/superadmin/relatorios', icon: '📊' },
+  { name: 'Templates', href: '/superadmin/templates', icon: '📋' },
+  { name: 'Componentes', href: '/superadmin/componentes', icon: '🧩' },
   { name: 'Configurações', href: '/superadmin/configuracoes', icon: '⚙️' },
 ];
 
@@ -37,51 +42,45 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const nav = isSuperadmin ? superadminNavigation : navigation;
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-[#0F172A]">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 border-r border-gray-800 transform transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#1E293B] border-r border-[#334155] transform transition-transform duration-300 lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex h-16 items-center justify-between px-6 border-b border-gray-800">
-          <span className="text-xl font-bold text-purple-400">Kera</span>
-          <button
-            className="lg:hidden text-gray-400 hover:text-white"
-            onClick={() => setSidebarOpen(false)}
-          >
-            ✕
-          </button>
+        <div className="flex h-16 items-center px-6 border-b border-[#334155]">
+          <span className="text-xl font-bold text-white">K<span className="text-purple-500">ERA</span></span>
         </div>
         <nav className="p-4 space-y-1">
           {nav.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                 pathname === item.href
-                  ? 'bg-purple-600/20 text-purple-300'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  ? 'bg-gradient-to-r from-purple-600/20 to-indigo-600/20 text-purple-300 border border-purple-500/30'
+                  : 'text-slate-400 hover:bg-[#334155]/50 hover:text-white'
               }`}
             >
-              <span>{item.icon}</span>
+              <span className="text-base">{item.icon}</span>
               {item.name}
             </Link>
           ))}
         </nav>
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-800">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[#334155]">
           <div className="flex items-center gap-3 px-3 py-2">
-            <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-medium">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white text-sm font-medium">
               {user?.nome?.[0]?.toUpperCase() || 'U'}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">{user?.nome}</p>
-              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+              <p className="text-xs text-slate-400 truncate">{user?.email}</p>
             </div>
           </div>
           <button
             onClick={logout}
-            className="mt-3 w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            className="mt-3 w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-[#334155]/50 rounded-lg transition-colors"
           >
             <span>⏻</span> Sair
           </button>
@@ -99,16 +98,16 @@ export function AppLayout({ children }: { children: ReactNode }) {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 h-16 bg-gray-900/80 backdrop-blur-sm border-b border-gray-800 flex items-center justify-between px-6 lg:px-8">
+        <header className="sticky top-0 z-30 h-16 bg-[#1E293B]/80 backdrop-blur-md border-b border-[#334155] flex items-center justify-between px-6 lg:px-8">
           <button
-            className="lg:hidden text-gray-400 hover:text-white"
+            className="lg:hidden text-slate-400 hover:text-white"
             onClick={() => setSidebarOpen(true)}
           >
             ☰
           </button>
           <div className="flex-1 lg:hidden" />
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-400 hidden sm:block">{user?.empresa?.nome}</span>
+            <span className="text-sm text-slate-400 hidden sm:block">{user?.empresa?.nome || 'Superadmin'}</span>
           </div>
         </header>
 
